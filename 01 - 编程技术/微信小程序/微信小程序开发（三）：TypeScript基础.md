@@ -102,7 +102,28 @@ notSure = "或许是一个字符串";
 notSure = false;
 ```
 
-如果你有一个 `unknwon` 类型的变量，你可以通过进行 `typeof` 、比较或者更高级的类型检查来将其的类型范围缩小
+如果你有一个 `unknwon` 类型的变量，你可以通过进行 `typeof` 、严格相等(不仅检查数值，也要求数据类型相同)或者更高级的类型检查来将其的类型范围缩小。
+
+```ts
+// @errors: 2322 2322 2322
+declare const maybe: unknown;
+// 'maybe' could be a string, object, boolean, undefined, or other types
+const aNumber: number = maybe;
+
+if (maybe === true) {
+  // TypeScript knows that maybe is a boolean now
+  const aBoolean: boolean = maybe;
+  // So, it cannot be a string
+  const aString: string = maybe;
+}
+
+if (typeof maybe === "string") {
+  // TypeScript knows that maybe is a string
+  const aString: string = maybe;
+  // So, it cannot be a boolean
+  const aBoolean: boolean = maybe;
+}
+```
 
 ## 8.任意类型:any
 
