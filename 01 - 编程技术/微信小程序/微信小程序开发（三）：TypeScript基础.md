@@ -91,7 +91,20 @@ let n:null = null;
 function say_hello(): void{};
 ```
 
-## 7.任意类型:any
+## 7.未知类型:unknow
+
+接收用户输入或API返回内容时，变量的类型往往是未知的，此时可以使用unknow类型的变量，指定编译器以任意的数据类型接收这些内容。
+
+```ts
+let notSure: unknown = 4;
+
+notSure = "或许是一个字符串";
+notSure = false;
+```
+
+如果你有一个 `unknwon` 类型的变量，你可以通过进行 `typeof` 、比较或者更高级的类型检查来将其的类型范围缩小
+
+## 8.任意类型:any
 
 不确定数据类型(接收用户输入、调用第三方库等情况)时使用，但不够安全，不建议使用。
 
@@ -154,7 +167,7 @@ console.log(x[5].toString());
 ```ts
 enum Color {Red, Green, Blue}
 let c: Color = Color.Green;
-let colorName: string = Color[2];    // 不清楚编号2是什么意义，可以通过这样的方法获取。
+let colorName: string = Color[2];    // 不清楚编号2是什么意义，可以通过这样的方法获取,取到的值为"Green"
 
 enum Week {Sunday = 7, Monday = 1, Tuesday, Wednesday, Thursday, Friday, Saturday}
 ```
