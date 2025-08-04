@@ -91,9 +91,9 @@ let n:null = null;
 function say_hello(): void{};
 ```
 
-## 7.未知类型:unknow
+## 7.未知类型:unknown
 
-接收用户输入或API返回内容时，变量的类型往往是未知的，此时可以使用unknow类型的变量，指定编译器以任意的数据类型接收这些内容。
+接收用户输入或API返回内容时，变量的类型往往是未知的，此时可以使用unknown类型的变量，指定编译器以任意的数据类型接收这些内容。
 
 ```ts
 let notSure: unknown = 4;
@@ -127,7 +127,7 @@ if (typeof maybe === "string") {
 
 ## 8.任意类型:any
 
-不确定数据类型(接收用户输入、调用第三方库等情况)时使用，但不够安全，不建议使用。
+需要处理来自用户的输入或第三方代码库的结果时，通常不希望类型检查器对这些值进行检查而是直接让它们通过编译阶段的检查，就可以使用`any`类型来标记这些变量
 
 ```ts
 let obj:any;
@@ -137,7 +137,48 @@ obj = "小明";
 obj = function() {};
 ```
 
-## 8.字面量
+## 补充：unknown类型与any类型的区别
+
+在 TypeScript 中，`unknown`和`any`都是用于表示类型不确定的值，但它们在类型安全性上有显著区别，主要体现在对类型检查的严格程度上：
+
+1. **`any`类型**（不是很安全）：
+    - 完全绕过TypeScript的类型检查
+    - 可以对`any`类型的值执行任何操作（调用任意方法、访问任意属性等），不会触发类型错误
+    - 可以将`any`类型赋值给任何其他类型，反之亦然
+
+2. **`unknown`类型**（相对比较安全）：
+    - 是类型安全的`any`，被设计为更安全的替代方案
+    - 不能直接对`unknown`类型的值执行操作，必须先进行**类型检查**或**类型断言**（见后文）
+    - `unknown`类型的值只能赋值给`unknown`或`any`类型，不能直接赋值给其他类型
+
+如何选择使用哪一种类型：
+- 当需要临时绕过类型检查且确定操作安全时，可以使用`any`
+- 当需要处理类型不确定的值但希望保持类型安全时，应优先使用`unknown`
+- `unknown`强制开发者进行显式的类型处理，减少了意外错误的可能性，是更推荐的做法
+
+## 9.never类型
+
+表示那些永不存在的值的类型，可以作为只抛出异常或没有返回值的函数的返回值。never类型的值可以赋值给热呢类型，但是任何类型的值不能赋值为never类型。
+
+```ts
+// 返回never的函数必须存在无法达到的终点
+function error(message: string): never {
+    throw new Error(message);
+}
+
+// 推断的返回值类型为never
+function fail() {
+    return error("Something failed");
+}
+
+// 返回never的函数必须存在无法达到的终点
+function infiniteLoop(): never {
+    while (true) {
+    }
+}
+```
+
+## 10.字面量
 
 只能赋值为定义的值。
 
@@ -161,7 +202,6 @@ let arr:number[] = [1, 2, 3, 4];
 ```
 
 - 数组不接受指定类型以外的其他类型数据，若尝试向上述数组中插入布尔值`true`，TS会报错。想要让数组接受任何类型的数据，可将其定义为`any`类型。
-
 
 ## 2. 元组：tuple
 
@@ -204,6 +244,7 @@ declare function create(o: object | null): void;
 
 create({ prop: 0 });  // OK 
 create(null);         // OK 
+
 create(42);           // Error 
 create("string");     // Error 
 create(false);        // Error 
@@ -266,24 +307,9 @@ for (var i = 0; i < 10; i++) {
 
 > 拥有块级作用域的变量的另一个特点是，它们不能在被声明之前读或写。 虽然这些变量始终“存在”于它们的作用域里，但在直到声明它的代码之前的区域都属于**暂时性死区**。 它只是用来说明我们不能在`let`语句之前访问它们。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 --- 
 # 参考资料
 
-[^1]: 听风是风.从零开始的微信小程序入门教程(三)\[EB/OL].(2020-04-16)\[2025-07-29]. https://www.cnblogs.com/echolun/p/12709761.html
-[^2]: 小浪努力学前端.还不会TS？带你TypeScript快速入门\[EB/OL].(2021-08-23)\[2025-08-01]. https://www.cnblogs.com/echolun/p/12709761.html
-[^3]: TSDoc.TS手册指南v1\[EB/OL].(2023-05-24)\[2025-08-03]. https://fxzer.github.io/tsdoc-vitepress/zh/handbooks/handbook-v1/BasicTypes
+[^1]: 小浪努力学前端.还不会TS？带你TypeScript快速入门\[EB/OL].(2021-08-23)\[2025-08-01]. https://www.cnblogs.com/echolun/p/12709761.html
+[^2]: TypeScript官方文档\[EB/OL].()\[2025-08-03]. https://www.tslang.cn/docs/handbook/basic-types.html
+[^3]: TSDoc.TS手册指南v1\[EB/OL].(2021-01-11)\[2025-08-03]. https://fxzer.github.io/tsdoc-vitepress/zh/handbooks/handbook-v1/BasicTypes
