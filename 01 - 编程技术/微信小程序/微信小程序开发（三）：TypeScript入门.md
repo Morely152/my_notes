@@ -190,6 +190,8 @@ animal = "cat";      // √
 animal = "dog";      // × 
 ```
 
+目前 TypeScript 中有三种可用的字面量类型集合，分别是：字符串、数字和布尔值。
+
 # 三、TypeScript复杂数据类型
 
 ## 1.数组：array
