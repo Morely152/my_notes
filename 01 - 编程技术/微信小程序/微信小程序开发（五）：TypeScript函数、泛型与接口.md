@@ -103,13 +103,32 @@ function buildName(firstName: string, ...restOfName: string[]) {
 let employeeName = buildName("Joseph", "Samuel", "Lucas", "MacKinzie");
 ```
 
-## 7. this
+## 7. 函数重载
 
-### ① this与箭头函数
+JavaScript本身是个动态语言。 JavaScript支持同名函数根据传入不同的参数而返回不同类型的数据，即支持函数重载。
+
+```ts
+function add_things(par_1:number, par_2:number):number {
+	return a + b;
+}
 
 
+```
 
 # 二、泛型
+
+在像C#和Java这样的语言中，可以使用`泛型`来创建可重用的组件，一个组件可以支持多种类型的数据。 这样用户就可以以自己的数据类型来使用组件。
+
+有一个方法`identity`，负责返回输入的内容（类似于`echo`）：
+
+```ts
+function identity(arg: any): any {
+    return arg;
+}
+```
+
+这样做存在问题，返回值会一直是any类型，即丢失了参数的数据类型信息。因此，我们需要一种方法使返回值的类型与传入参数的类型是相同的。 这里，我们使用了**类型变量**，它是一种特殊的变量，只用于表示类型而不是值。
+
 
 
 
@@ -122,5 +141,5 @@ let employeeName = buildName("Joseph", "Samuel", "Lucas", "MacKinzie");
 # 参考资料
 
 [^1]: TSDoc.TS手册指南v1-函数\[EB/OL].(2023-04-28)\[2025-08-05]. https://fxzer.github.io/tsdoc-vitepress/zh/handbooks/handbook-v1/Functions
-[^2]: TSDoc.TS手册指南v1-\[EB/OL].(2023-04-28)\[2025-08-05]. https://fxzer.github.io/tsdoc-vitepress/zh/handbooks/handbook-v1/Generics
+[^2]: TSDoc.TS手册指南v1-泛型\[EB/OL].(2023-04-28)\[2025-08-05]. https://fxzer.github.io/tsdoc-vitepress/zh/handbooks/handbook-v1/Generics
 [^3]: TSDoc.TS手册指南v1-接口\[EB/OL].(2023-04-28)\[2025-08-05]. https://fxzer.github.io/tsdoc-vitepress/zh/handbooks/handbook-v1/Interfaces
