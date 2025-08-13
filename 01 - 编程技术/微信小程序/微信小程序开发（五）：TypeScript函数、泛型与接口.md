@@ -166,13 +166,22 @@ function identity<T>(arg: T): T {
 
 这里试图打印参数的长度，但是某些类型的参数没有`lengh`属性（如数字）。
 
-## 3.泛型变量
-
-
 # 三、接口
 
+TypeScript 的核心原则之一是对值所具有的**结构**进行类型检查。 它有时被称做“鸭式辨型法”或“结构性子类型化”。TypeScript接口的作用就是为这些类型命名，以及我们写的代码或第三方代码定义契约。
 
+通过一个简单示例，来观察接口是如何工作的：
 
+```ts
+function printLabel(labeledObj: { label: string }) {
+  console.log(labeledObj.label);
+}
+
+let myObj = { size: 10, label: "Size 10 Object" };
+printLabel(myObj);
+```
+
+# 
 
 --- 
 # 参考资料
