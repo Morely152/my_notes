@@ -181,7 +181,23 @@ let myObj = { size: 10, label: "Size 10 Object" };
 printLabel(myObj);
 ```
 
-# 
+调用`printLabel`方法时，类型检查器会检查其参数的类型；即要求此对象参数包含**名为label且类型为string**的属性。要想保证参数必须包含一个`label`属性且类型为`string`，可以使用**接口（interface）**
+
+```ts
+interface LabeledValue {
+  label: string;
+}
+
+function printLabel(labeledObj: LabeledValue) {
+  console.log(labeledObj.label);
+}
+
+let myObj = { size: 10, label: "Size 10 Object" };
+printLabel(myObj);
+```
+
+`LabeledValue`接口就好比一个名字，用来描述上面例子里的要求。 它代表了有一个`label`属性且类型为`string`的对象。
+
 
 --- 
 # 参考资料

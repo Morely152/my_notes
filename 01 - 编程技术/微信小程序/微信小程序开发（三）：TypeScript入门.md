@@ -313,6 +313,4 @@ for (var i = 0; i < 10; i++) {
 --- 
 # 参考资料
 
-[^1]: 小浪努力学前端.还不会TS？带你TypeScript快速入门\[EB/OL].(2021-08-23)\[2025-08-01]. https://www.cnblogs.com/echolun/p/12709761.html
-[^2]: TypeScript官方文档\[EB/OL].()\[2025-08-03]. https://www.tslang.cn/docs/handbook/basic-types.html
-[^3]: TSDoc.TS手册指南v1\[EB/OL].(2021-01-11)\[2025-08-03]. https://fxzer.github.io/tsdoc-vitepress/zh/handbooks/handbook-v1/BasicTypes
+[^1]: 听风是风.从零开始的微信小程序入门教程(三)\[EB/OL].(2020-04-16)\[2025-08-15]. https://www.cnblogs.com/echolun/p/12709761.html
