@@ -2,40 +2,57 @@
 
 ---
 --- 
-> 声明：本篇笔记部分摘自[《Java核心技术（卷Ⅰ） - 机械工业出版社》](https://detail.tmall.com/item.htm?ali_refid=a3_420434_1006%3A1151895243%3AN%3AoB1xLXSDdjSpCunkFwpZbCtvD%2B6YEaA9%3A39f8fcdda956d1ec63523e9a6e9e2355&id=708821240842&mi_id=0000mg2-P7Ustbzeym2_6DxuUMLCpndkVCAGc5EaA_l8QQ0&mm_sceneid=1_0_128421313_0&priceTId=2147831a17554253371677975e1dca&spm=a21n57.1.hoverItem.2&utparam=%7B%22aplus_abtest%22%3A%226b956865e0df43cd4a6620880d877f11%22%7D&xxc=ad_ztc)，遵循[CC BY 4.0协议](https://creativecommons.org/licenses/by/4.0/legalcode.zh-hans)。这本书以及这个系列的笔记会将Java与一些编程语言的特性作比较；建议拥有一定的C/C++或其他编程语言的学习基础后，再阅读这本书或这个系列的笔记来学习Java。如果是第一次接触编程语言，建议从相对简单的C语言或Python开始；或者参考一些体系化的视频课程来进行学习，否则会感到有一定的压力。
+> 声明：本篇笔记部分摘自[《Java核心技术（卷Ⅰ） - 机械工业出版社》](https://detail.tmall.com/item.htm?ali_refid=a3_420434_1006%3A1151895243%3AN%3AoB1xLXSDdjSpCunkFwpZbCtvD%2B6YEaA9%3A39f8fcdda956d1ec63523e9a6e9e2355&id=708821240842&mi_id=0000mg2-P7Ustbzeym2_6DxuUMLCpndkVCAGc5EaA_l8QQ0&mm_sceneid=1_0_128421313_0&priceTId=2147831a17554253371677975e1dca&spm=a21n57.1.hoverItem.2&utparam=%7B%22aplus_abtest%22%3A%226b956865e0df43cd4a6620880d877f11%22%7D&xxc=ad_ztc)及[Java教程-廖雪峰-2025-06-16](https://liaoxuefeng.com/books/java/introduction/index.html)，遵循[CC BY 4.0协议](https://creativecommons.org/licenses/by/4.0/legalcode.zh-hans)。这本书以及这个系列的笔记会将Java与一些编程语言的特性作比较；建议拥有一定的C/C++或其他编程语言的学习基础后，再阅读这本书或这个系列的笔记来学习Java。如果是第一次接触编程语言，建议从相对简单的C语言或Python开始；或者参考一些体系化的视频课程来进行学习，否则会感到有一定的压力。
 > 存在由AI生成的小部分内容，仅供参考，请仔细甄别可能存在的错误。
 
-# 一、Java的发展史
+# 一、Java概述
 
-## **1. 起源（1991–1995）**
+## 1.Java发展史
 
-- **项目名称**：最初由**James Gosling**（詹姆斯·高斯林）在Sun Microsystems（太阳微系统公司）领导开发，命名为**Oak**（橡树），目标是为嵌入式设备（如电视机顶盒）设计一种便携语言。
-- **改名Java**：因商标冲突，1995年更名为**Java**（灵感来自印尼爪哇岛的咖啡，因此Logo是一杯咖啡）。
-- **互联网机遇**：随着互联网兴起，Java的**跨平台特性**（通过JVM实现"一次编写，到处运行"）使其迅速成为Web开发的热门选择。
+> Java最早是由SUN公司（已被Oracle收购）的詹姆斯·高斯林（高司令，人称Java之父）在上个世纪 90年代初开发的一种编程语言，最初被命名为Oak，目标是针对小型家电设备的嵌入式应用（结果市场没啥反响）。互联网的崛起让Oak重新焕发了生机，于是SUN公司改造了Oak，由于Oak已经被注册，在1995年以Java的名称正式发布。随着互联网的高速发展，Java逐渐成为最重要的网络编程语言。
+> Java介于编译型语言和解释型语言之间。编译型语言如C、C++，代码是直接编译成机器码执行，但是不同的平台（x86、ARM等）CPU的指令集不同，因此，需要编译出每一种平台的对应机器码。解释型语言如Python、Ruby没有这个问题，可以由解释器直接加载源码然后运行，代价是运行效率太低。而Java是将代码编译成一种“字节码”，它类似于抽象的CPU指令，然后，针对不同平台编写虚拟机，不同平台的虚拟机负责加载字节码并执行，这样就实现了“一次编写，到处运行”的效果。当然，这是针对Java开发者而言。对于虚拟机，需要为每个平台分别开发。为了保证不同平台、不同公司开发的虚拟机都能正确执行Java字节码，SUN公司制定了一系列的Java虚拟机规范。从实践的角度看，JVM的兼容性做得非常好，低版本的Java字节码完全可以正常运行在高版本的JVM上。
 
-## **2. 正式发布（1995–2000）**
+随着Java的不断发展，出现了三个版本：
 
-- **1995年**：Sun发布**Java 1.0**，强调**Applet**（在浏览器中运行的小程序），推动早期Web动态交互。
-- **1996年**：JDK 1.0（Java Development Kit）发布，包含核心库和JVM。
-- **企业级扩展**：1999年推出**J2EE**（Java 2 Platform Enterprise Edition），支持企业应用开发（如Servlet、EJB）。
+- Java SE: standard edition, 标准版本
+- Java EE: enterprise edition, 企业版本
+- Java ME: mico edition, 微服务版本
 
-## **3. 成熟与开源（2000–2010）**
+这三者是 `Java EE > Java SE > Java ME` 的关系，，Java SE就是标准版，包含标准的JVM和标准库，而Java EE是企业版，它在Java SE的基础上添加了大量的API和库，以便方便开发Web应用、数据库、消息服务等，Java EE的应用使用的虚拟机和Java SE完全相同。Java ME就和Java SE不同，它是一个针对嵌入式设备的“瘦身版”，Java SE的标准库无法在Java ME上使用，Java ME的虚拟机也是“瘦身版”。
 
-- **版本演进**：
-    - J2SE 1.4（2002）：引入**NIO**、正则表达式等。
-    - Java 5（2004）：重大更新，支持**泛型**、**注解**、**枚举**等。
-- **开源化**：2006年Sun将Java部分开源，2007年完成全部开源（OpenJDK）。
-- **2009年**：Oracle收购Sun Microsystems，成为Java的主要维护者。
+## 2.Java学习路线
 
-## **4. 现代Java（2010至今）**
+对于常规的Java软件应用开发者来说，学习Java SE、Java EE就足够了。Java ME的流行程度不高，如果没有特殊需求无需学习。下面是推荐的学习路线：
 
-- **版本加速**：
-    - **Java 8**（2014）：里程碑版本，引入**Lambda表达式**、**Stream API**、**新的日期时间API**。
-    - **Java 11**（2018）：首个长期支持（LTS）版本，Oracle调整发布周期（每半年一版，每3年一个LTS）。
-    - **Java 17**（2021）：最新LTS版本，增强模式匹配、密封类等。
-- **生态繁荣**：Spring框架、Android开发（早期基于Java）、大数据（Hadoop）等广泛应用。
+1. 首先学习Java SE，掌握Java语言本身、Java核心开发技术以及Java标准库的使用； 
+2. 继续学习Java EE，重点学习Spring框架、数据库开发、分布式架构；
+3. 如果打算学习大数据开发，那么Hadoop、Spark、Flink这些大数据平台就是需要学习的，他们都基于Java或Scala开发； 
+4. 如果想要学习移动开发，那么就深入Android平台，掌握Android App开发。
 
-## [Java白皮书](https://www.oracle.com/java/technologies/javase/javase-whitepapers.html)上提到的11个关键术语
+## 3.JDK与JRE、JVM
+
+- JDK：Java Development Kit，Java程序开发工具包
+- JRE：Java Runtime Environment，Java运行时环境
+- JVM:Java Virtual Machine，Java虚拟机
+
+打个简单的比方，JDK类似于厨房里的食材和食谱（标准类库和方法），我们可以用来设计各种菜品（源代码）；JRE是餐厅，让厨师有地方做菜，并且能够让顾客有地方享受美食（运行环境）；JVM就是制作食物的厨师，负责将我们设计的菜品做成食物（编译执行）。
+
+与上面例子稍有不同的是，JDK中也包含了JRE与调试器、编译器等开发工具，而JRE当然是包含JVM的了。即：我们通过JDK编写代码，在JRE中经过JVM的编译之后再运行。它们之间的关系如下图：
+
+![](20250820160152470.png#bc)
+
+玩过Java版MC的同学应该都知道，在启动游戏之前会检查Java版本，这里的“Java版本”指的是JRE，即我们需要准备好在自己的电脑上运行Java的环境。
+
+## 4.JSR与JCP
+
+- JSR：Java Specification Request，Java规范要求
+- JCP：Java Community Process，Java社区组织
+
+为了保证Java语言有良好的可拓展性和可移植性，需要很高的代码规范性。JSR这一规范就规定了开发者在为Java添砖加瓦时的代码功能。JCP这一组织的任务之一就是审核和修订JSR。
+
+## 5.Java的特点
+
+下面是[Java白皮书](https://www.oracle.com/java/technologies/javase/javase-whitepapers.html)上提到的11个关键术语，描述了Java这门编程语言的一些特点：
 
 - 简单性
 - 面向对象
@@ -75,6 +92,26 @@ public class HelloWorld {
 作为初学者，或许会对`main`方法的参数`String[] args`感到疑惑，这里做出解释：
 
 > 当我们运行Java程序时，可以在命令行（或终端）后面附加参数，这些参数会被传递给`main`方法，如`java HelloWorld arg1 arg2 arg3`，这里的`agr1 arg2 arg3`会作为字符串数组`String[]`传进`main`方法。Java规范要求`main`方法的签名必须如此，作为程序的统一入口点。即使我们不使用它，也需要声明，否则JVM无法识别`main`方法。
+
+## 如何运行这个程序？
+
+或许有同学会觉得“这不是明摆着吗，点一下VS Code或者IDEA右上角的按钮就可以了啊，有啥好说的”，但实际上"点一下按钮"的背后，是IDE自动为我们执行了一些编译和启动的命令。为了让我们更好地理解Java程序编译运行的过程，深化对上面JDK与JVM的理解，探讨一下如何通过这些命令的方式来运行是很有必要的。
+
+Java源码本质上是一个文本文件，我们需要先用 `javac` 把 `HelloWorld.java` 编译成字节码文件 `HelloWorld.class` ，然后，用 `java` 命令执行这个字节码文件：
+
+首先进入源代码所在的目录，执行这一个命令将Java程序编译成字节码：
+
+```shell
+javac HelloWorld.java
+```
+
+可以看到源代码所在的目录下出现了一个同名文件`HelloWorld.class`，这就是编译之后的字节码文件。执行这一句命令来通过JVM运行字节码程序：
+
+```shell
+java HelloWorld
+```
+
+注意：给虚拟机传递的参数 `HelloWorld` 是我们定义的类名而不是文件名（不需要.class的后缀），虚拟机自动查找对应的class文件并执行。
 
 # 三、注释
 
@@ -365,3 +402,7 @@ if (x!=0 && 1 / x > x + y) {
 - `+=`系列的优先级是**从右向左**，即`a += b += c`的处理顺序是`a += (b += c)`，先处理`b += c`,即 `b = b + c`,然后把现在 `b` 完成加法操作之后的值加到 `a` 上。除此之外，`+=` 这个系列的符号也是**从右往左**处理的。
 - `&&`的优先级高于 `||`。
 
+--- 
+# 参考资料
+
+[^1]: 廖雪峰的官方网站.Java教程\[EB/OL].(2025-06-07)\[2025-08-20]. https://www.cnblogs.com/echolun/p/12709761.html

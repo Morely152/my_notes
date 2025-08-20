@@ -59,7 +59,7 @@ System.out.println("常用的尺码有：" + String.join("/", "S", "M", "L", "XL
 
 ### ④ 字符串相同的判断方法
 
-在C++中，String类重载了`==`运算符的逻辑，从而让我们能够方便地像比较数值一样去判断两字符串是否相同。但在Java中，由于String类采取的是指针式的策略，使用`==`只能够判断符号两端的字符串或者字面量是否指向同一个内存地址。但绝大多数情况下都会出现两个相同的字符串存储在不同地址上的情况，这样就会使得在Java中使用`==`来比较字符串出现奇奇怪怪的bug，甚至某些情况下这种bug还是间歇性的，复现和排查起来相对困难，是一种很糟糕的情况。
+在C++中，String类重载了`==`运算符的逻辑，从而让我们能够方便地像比较数值一样去判断两字符串是否相同。但在Java中，由于String类采取的是指针式的策略（引用类型），使用`==`只能够判断符号两端的字符串或者字面量是否指向同一个内存地址。但绝大多数情况下都会出现两个相同的字符串存储在不同地址上的情况，这样就会使得在Java中使用`==`来比较字符串出现奇奇怪怪的bug，甚至某些情况下这种bug还是间歇性的，复现和排查起来相对困难，是一种很糟糕的情况。
 
 为了在Java中判断两个字符串或者字面量是否相同，我们可以使用`equals()`方法。例如我们有一个字符串`String greeting = "Hello!"`，我们可以使用`greeting.equals("Hello!")`来检查它的内容，该方法会返回一个表示是否相等的布尔值。只需要检查字符相同忽略大小写的情况下，可以使用`equalsIgnoreCase()`这个方法。
 
@@ -154,9 +154,177 @@ public class Demo {
 ### ⑧ 文本块
 
 类似Python的多行字符串，Java可以使用`"""`定义一个多行的文本块，这里一笔带过。
+
+## 2.数组
+
+### ① 定义一个数组
+
+```java
+// 数组
+public class Main {
+	public static void main(String[] args) {
+		// 5位同学的成绩:
+		int[] ns = new int[5];
+		ns[0] = 68;
+		ns[1] = 79;
+		ns[2] = 91;
+		ns[3] = 85;
+		ns[4] = 62;
+	}
+}
+```
+
+定义一个数组类型的变量，使用 `类型[] 数组名 = new 类型[长度]`。数组变量初始化必须使用 `new int[5]` 表示创建一个可容纳5个 `int` 元素的数组。也可以写成 `int[] ns = new int[] { 68, 79, 91, 85, 62 };`，在定义的同时进行初始化操作，编译器会自动推算数组长度。
+
+Java的数组有几个特点： 
+- 数组所有元素初始化为默认值，整型都是 `0` ，浮点型是 `0.0` ，布尔型是 `false` ； 
+- 数组一旦创建后，大小就不可改变。
+- 与 `String类` 相同，数组也是引用类型，不可以修改长度。
+
+### ② 数组元素的访问与修改
+
+要访问数组中的某一个元素，需要使用索引。同样，数组索引从 `0` 开始，`n` 个元素的数组，索引范围是 `0 ~ n-1` 。使用赋值语句修改数组元素，例如 `ns[1] = 79`。可以用 `数组变量.length` 获取数组大小。
+
+```java
+import java.util.Arrays;
+
+public class Demo {
+    public static void main(String[] args) {
+		
+        int[] ns;
+		
+        ns = new int[] { 68, 79, 91, 85, 62 };
+        System.out.println(Arrays.toString(ns));
+		
+        ns = new int[] { 1, 2, 3 };
+        System.out.println(Arrays.toString(ns));
+		
+    }
+}
+
+// 输出结果：
+[68, 79, 91, 85, 62]
+[1, 2, 3]
+```
+
+这时有同学就要问了，“不是说数组长度不能修改吗？”注意这里数组是引用类型，第二句的 `ns = new int[] { 1, 2, 3 };` 会让 `ns` 指向一个新的数组，如下图所示：
+
+![](20250820170301214.png#bc)
+
+（还好Java有**垃圾回收**的处理机制，会在检测到之前的数组无用之后自动清理掉，避免了内存泄漏的发生…）
+
+### ③ 数组的打印
+
+细心的同学会发现，上例中输出数组元素时使用了 `Arrays.toString(ns)` 的写法，可以直接 `System.out.println(ns)`吗？
+~~（要你说，能用我还费劲巴拉引入java.util.Arrays干啥）~~
+
+试试看吧，实际上输出了 `[I@5caf905d` 这样明显不是给人看的玩意~~（你要说能看得懂那我佩服你）~~，这是表示字符串数组的 `Class` 名，`@` 后面的是十六进制的 `hashCode`。这是因为数组虽然没有显式定义成一个类，但它的确是一个对象，继承了祖先类 Object 的所有方法~~（那这又是为什么呢）~~。想要实现类似于Python那样，以**很人性化**的方式查看数组的各个元素，需要这样写：
+
+```java
+import java.util.Arrays;
+
+int[] s = new int[] { 1, 2, 3 };
+System.out.println(Arrays.toString(s));
+```
+
+（对比一下Python `s = [1, 2, 3]`、`print(s)` 简单两行搞定，深刻体会到了“人生苦短，我用Python”这句话多对了…）
+
+### ④ 元素也是引用类型的情况
+
+来看这样一个数组：
+
+```java
+String[] names = { "ABC", "XYZ", "zoo" };
+```
+
+发现数组中的元素也是引用类型的，它们实际上也是一层指针类似的概念。Java是如何处理这样的数组的呢？
+
+这里就有点像真正意义上的指针了，对于String类型的数组，它的每一个元素都**指向**某个字符串对象，而不是直接存储这些字符串对象。看图的话估计更好理解：
+
+![](20250820173143784.png)
+
+此时对 `names[1]` 赋值，也只会把 `names[1]` 指向另一个字符串，原来的被自动回收掉，再也无法访问到了。
+
+再看下面这段代码，运行结果是什么呢？
+
+```java
+public class Demo {
+    public static void main(String[] args) {
+		
+        String[] names = {"ABC", "XYZ", "zoo"};
+        String s = names[1];
+        String[] names_2 = names;
+		
+        names[1] = "cat";
+        System.out.println(s);             // 是"XYZ"还是"cat"?
+        System.out.println(names_2[1]);    // 是"XYZ"还是"cat"?
+    }
+}
+```
+
+输出的结果：`s="XYZ", names_2[1]="cat"`。虽然后面修改了 `names[1]`，但在这之前 `s` 已经指向了 `"XYZ"` 或者说拷贝了 `names[1]` 中`"XYZ"` 的地址，即使后面修改了 `names[1]`，也只是指向了另外一个字符串 `"cat"`，之前的 `XYZ` 仍然存在，并且因为已经关联了 `x`，不是无用的资源也就不会被回收掉。
+
 # 二、流程控制语句
 
-## 1.Swith表达式
+## 1.格式化输出
+
+Java同样支持C/C++中的 `printf()` 方法,使用占位符 `%` 实现格式化输出：
+
+```java
+public class Demo {
+    public static void main(String[] args) {
+		
+	    double d = 3.1415926;
+	    
+	    System.out.printf("%.2f\n", d); 
+	    // 显示两位小数3.14
+	    System.out.printf("%.4f\n", d); 
+	    // 显示4位小数3.1416
+	    
+    }
+}
+```
+
+| 占位符  | 说明               |
+| ---- | ---------------- |
+| `%d` | 格式化输出整数          |
+| `%x` | 格式化输出十六进制整数      |
+| `%f` | 格式化输出浮点数         |
+| `%e` | 格式化输出科学计数法表示的浮点数 |
+| `%s` | 格式化字符串           |
+| `%%` | 表示普通的%符号         |
+
+一些比较复杂的格式控制，如 `%02d`、`%-3f` 与C/C++中的定义基本相同，此处省略。
+
+## 2.输入
+
+``` java
+import java.util.Scanner;
+
+public class Demo {
+    public static void main(String[] args) {
+        
+        Scanner scanner = new Scanner(System.in);         // 创建Scanner对象
+		
+        System.out.print("请输入你的姓名: ");               // 打印提示
+        String name = scanner.nextLine();                 // 读取一行输入并获取字符串
+        System.out.print("请输入你的年龄: ");               // 打印提示
+        int age = scanner.nextInt();                      // 读取一行输入并获取整数
+		
+        System.out.printf("你好%s,你现在%d岁\n", name, age); 
+    }
+}
+```
+
+C语言中使用`scanf()`方法接收输入，C++中使用`cin >>`输入流；而在Java中略微麻烦一些，需要引入`Scanner`类，并创建一个`Scanner`对象。
+
+- 使用 `scanner.nextLine()` 读取用户输入的字符串 
+- 使用 `scanner.nextInt()` 读取用户输入的整数
+- 使用 `scanner.nextDouble()` 读取用户输入的双精度小数
+  
+`Scanner` 会自动转换数据类型，因此不必手动转换。
+
+## 3.Swith表达式
 
 Switch语句在Java 14被引入。熟悉C语系的编程语言都应该很熟悉了。直接上语法：
 
