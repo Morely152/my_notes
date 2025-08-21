@@ -1,13 +1,4 @@
----
-title: JSON保存设置项异常复原问题
-date: 2025 - 04 - 11 07:42:00
-categories: 
-    - 踩坑记录
-    - WPF
-tags: 
-    - Visual Studio
-    - WPF
----
+--- 
 # 一、问题概述：
 
 在WPF项目中新建了文件Settings.json，用于保存开机自启动的设置记录，并将其属性设置为“内容--始终复制”以将JSON文件添加到项目文件夹中。
