@@ -171,7 +171,7 @@ public class Main {
 		ns[3] = 85;
 		ns[4] = 62;
 		
-		// 也可以写成ns = new int[] { 68, 79, 91, 85, 62 };
+		// 也可以写成ns = { 68, 79, 91, 85, 62 };
 	}
 }
 ```
@@ -225,7 +225,7 @@ public class Demo {
 ```java
 import java.util.Arrays;
 
-int[] s = new int[] { 1, 2, 3 };
+int[] s = { 1, 2, 3 };
 System.out.println(Arrays.toString(s));
 ```
 
@@ -266,6 +266,75 @@ public class Demo {
 
 输出的结果：`s="XYZ", names_2[1]="cat"`。虽然后面修改了 `names[1]`，但在这之前 `s` 已经指向了 `"XYZ"` 或者说拷贝了 `names[1]` 中`"XYZ"` 的地址，即使后面修改了 `names[1]`，也只是指向了另外一个字符串 `"cat"`，之前的 `XYZ` 仍然存在，并且因为已经关联了 `x`，不是无用的资源也就不会被回收掉。
 
+### ⑤ 数组的遍历
+
+有时需要逐个读取数组的元素来进行统计或替换等处理，通常使用 `for` 循环来进行遍历：
+
+```java
+
+int[] arr = {1, 2, 3};
+
+for (int i=0; i<arr.length; i++) {
+	System.out.println(arr[i]);
+}
+
+// 还可以直接使用 for-each遍历
+for(int n : arr) {
+	System.out.println(n);
+}
+```
+
+### ⑥ 数组排序
+
+#### 手搓冒泡排序
+
+```java
+import java.util.Arrays;
+
+public class Demo {
+    public static void main(String[] args) {
+	    
+        int[] ns = { 28, 12, 89, 73, 65, 18, 96, 50, 8, 36 };
+        // 排序前:
+        System.out.println(Arrays.toString(ns));
+        for (int i = 0; i < ns.length - 1; i++) {
+            for (int j = 0; j < ns.length - i - 1; j++) {
+                if (ns[j] > ns[j + 1]) {
+                    // 交换ns[j]和ns[j+1]:
+                    int tmp = ns[j];
+                    ns[j] = ns[j + 1];
+                    ns[j + 1] = tmp;
+                }
+            }
+        }
+        // 排序后:
+        System.out.println(Arrays.toString(ns));
+
+    }
+}
+```
+
+冒泡排序的原理是，每次都将前 `n` 个数中的最大值"冒泡"到最右边，然后忽略这个最大值，然后再找前 `n-1` 个数中的最大值冒泡到之前最大值的左边；以此类推，最后就形成了从小到大的有序列表。
+
+#### Array.sort方法
+
+Java的标准库已经内置了排序功能，我们只需要调用JDK提供的 `Arrays.sort()` 就可以排序
+
+```java
+import java.util.Arrays;
+
+public class Demo {
+    public static void main(String[] args) {
+
+        int[] ns = { 28, 12, 89, 73, 65, 18, 96, 50, 8, 36 };
+        Arrays.sort(ns);
+        System.out.println(Arrays.toString(ns));
+
+    }
+}
+```
+
+此方法会改变数组的内容，而不是返回一个临时的结果；即排序后数组中各元素指向的地址会变化。`Arrays.sort()` 方法会对字符串数组
 # 二、流程控制语句
 
 ## 1.格式化输出
@@ -324,7 +393,7 @@ C语言中使用`scanf()`方法接收输入，C++中使用`cin >>`输入流；�
 - 使用 `scanner.nextInt()` 读取用户输入的整数
 - 使用 `scanner.nextDouble()` 读取用户输入的双精度小数
   
-`Scanner` 会自动转换数据类型，因此不必手动转换。
+`Scanner` 会自动转换数据类型，不必手动转换。
 
 ## 3.if语句
 
@@ -485,6 +554,39 @@ for (double d: array) {
 	System.out.println(d);
 }
 ```
+
+和for循环相比，`for each` 循环的变量 `n` 不再是计数器，而是直接对应到数组的每个元素。`for each` 循环的写法也更简洁。但是，`for each` 循环无法指定遍历顺序，也无法获取数组的索引。
+
+## 8. break和continue、goto
+
+与C/C++相同，Java中的 `break` 关键字可以用来跳出当前的循环（立即中断循环，跳过此轮循环剩余操作，直接跳出循环进入下面的逻辑）；`continue` 关键词用于跳过这一次循环（立即中断循环，继续进行下一轮循环）。
+
+> 相当于在流水线上打螺丝，`break` 表示到点下班直接撂挑子不干，骑小电驴回家；`continue` 表示打到一半发现这螺丝是次品，把这一个丢了继续打下一个螺丝…
+
+虽然 `goto` 语句被认为是一个不好的设计，会让代码的流程变得非常复杂（像面条一样搅在一起）；因此Java中去掉了这一个关键字。但是这样 `设计一个标志，在需要的时候让程序回到这个标志处向下执行的逻辑` 是很有用的，比如说一次性跳出多重循环。好在Java提供了**带标签的break和continue**来实现类似的控制流功能：
+
+```java
+public class Demo {
+    public static void main(String[] args) {
+
+        outerLoop:
+        for (int i = 0; i < 5; i++) {
+            System.err.println(i);
+
+            if (i == 4) {
+                System.err.println("跳转到outerLoop处");
+                break outerLoop;
+            }
+        }
+
+    }
+}
+```
+
+上例中通过 `outerLoop:` 定义了一个标志（注意用冒号结束，不是分号）；然后通过 `break outerloop;` 终止循环并且跳转到标志处，当然也可以写 `continue outerloop` 就是了。
+
+不过虽然这样做很爽，也还是要谨记代码简洁性和易读性的原则，要么让跳转语句和标志之间不要有太长的逻辑；要么添加上比较详细的注释说明，防止协作开发的时候同事对着咱写的代码~~素质飙升~~礼貌问候…
+
 
 
 
