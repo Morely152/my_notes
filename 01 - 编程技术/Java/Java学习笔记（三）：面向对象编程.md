@@ -24,13 +24,13 @@ dryingClothes(machine, clothes);
 fetchClothes(person, machine);
 ```
 
-面向对象编程则会将这一系列流程分为`对象 `、`动作` 和 `属性`。如上例中的人、洗衣机和衣服可以看做是三个独立的对象；人具有放衣服、拿衣服两个动作；洗衣机具有洗衣服、烘干两个动作；而衣服具有是否干净以及是否在洗衣机里的属性。
+面向对象编程则会将这一系列流程分为`对象`、`动作`（方法） 和 `字段`（属性）。如上例中的人、洗衣机和衣服可以看做是三个独立的对象；人具有放衣服、拿衣服两个动作；洗衣机具有洗衣服、烘干两个动作；而衣服具有是否干净以及是否在洗衣机里的属性。
 
 这样一来，我们就给这些对象定义一系列的行为（又称作方法
 、函数）以及属性；程序运行的逻辑就从面向过程的自上而下变成了对象之间的交互；这样的程序设计思想抽象程度更高，也很好地降低了代码之间的耦合度，是一种更加接近现实的程序设计思路。
 
 > 关于上文中提到的“降低了代码之间的耦合度”，这里给出我的理解，或许不一定正确：
-> 对于一个“人吃饭”的这么一个事儿，面向过程编程定义的函数一般是 **吃(人,饭)**，即参数中包含了人和饭两个对象；而面向对象编程中，一般将吃饭看做是人的行为，将饭作为人这个吃的行为设计到的另一个对象，于是写成 **人.吃(饭)**， 这样一来，方法中只需要考虑对饭进行处理，而无需像 **吃(人,饭)** 一样，既要考虑饭，还要考虑人，把人和饭绑定在一起。面向对象的写法中，"吃"是人的普遍行为，只要考虑是吃什么饭，而不用想是什么人来吃，这样就解除了人和饭的绑定，于是就让不同模块的代码之间的耦合度降低了。
+> 对于一个“人吃饭”的这么一个事儿，面向过程编程定义的函数一般是 **吃(人,饭)**，即参数中包含了人和饭两个对象；而面向对象编程中，一般将吃饭看做是人的行为，将饭作为人这个吃的行为设计到的另一个对象，于是写成 **人.吃(饭)**， 这样一来，无需像 **吃(人,饭)** 一样，既要考虑饭，还要考虑人，把人和饭绑定在一起。面向对象的写法中，"吃"是人的普遍行为，只要考虑是吃什么饭，而不用想是什么人来吃，这样就解除了人和饭的绑定，于是就让不同模块的代码之间的耦合度降低了。
 
 需要注意以下两点：
 
@@ -342,6 +342,8 @@ Java只允许一个class继承自一个类，因此一个类有且仅有一个�
 - `sealed`（进一步限制继承）
 - `non-sealed`（开放继承）
 
+与C++不同的是，Java中的继承只有 `public` 一种，没有 `protected` 继承和 `private` 继承。
+
 ## 2.继承的构造过程
 
 ```java
@@ -513,19 +515,385 @@ class Student extends Person {
 
 # 五、多态
 
+## 1.方法覆写
 
+在继承关系中，子类如果定义了一个与父类方法签名（方法名称、参数类型、顺序及数量）完全相同的方法，被称为覆写（Override）。例如：
+
+```java
+	class Person {
+		public void run() {
+			System.out.println("人类跑步");
+		}
+	}
+	
+	
+	class Student extends Person {
+		public void run() {
+			@Override
+			System.out.println("学生跑步");
+		}
+	}
+```
+
+`Override`（方法覆写）和 `Overload`（方法重载）不同之处在于方法签名相同。如果不同就是`Overload`了，`Overload`定义的是一个新方法；如果方法签名相同，并且返回值也相同，就是 `Override`。如果方法签名相同，返回值不同，Java编译器会报告错误。
+
+加上 `@Override` 可以明确告诉编译器这里是覆写方法，让它帮助我们检查是否进行了正确的覆写。这个符号不是必须添加的。即使对子类进行了父类方法的覆写，我们仍然可以通过 `super` 关键字调用父类中被覆盖掉的方法。
+
+## 2.实现多态
+
+现在考虑这样一个情况，子类 `Student` 继承了父类 `Person` ，并且覆写了 `run` 方法，那当我们通过 `Person p = new Student()` 创建一个实际类型为 `Person`，引用类型为 `Student`的变量，再调用`run`方法时，实际调用的是哪一个方法呢？
+
+```java
+class Person {  
+    public void run() {  
+        System.out.println("人类跑步");  
+    }  
+}  
+  
+  
+class Student extends Person {  
+    @Override  
+    public void run() {  
+        System.out.println("学生跑步");  
+    }  
+}  
+  
+public class Demo {  
+    public static void main(String[] args) {  
+  
+        Person p = new Student();  
+        p.run();  
+  
+    }  
+}
+```
+
+大家可以自己粘贴到IDEA运行一下，这个例子很好地展现了**多态**这一面向对象的重要特性。结果会输出 `"学生跑步"`，即调用的是子类的覆写方法。
+
+从而我们得出了重要结论：**Java的实例方法调用是基于运行时的实际类型的动态调用，而非变量的声明类型。**
+
+这样做是有很大好处而且很方便的。例如在税务计算程序中，通过定义一个统一的 `Income` 父类和 `getTax()` 方法，然后为不同类型的收入（普通收入、工资收入、国务院津贴）创建子类并覆写各自的税率计算方法。在计算总税费时，只需处理 `Income` 父类类型，程序会根据实际对象类型自动调用相应的税率计算方法。
+这样设计使得系统具有良好的扩展性 —— 新增收入类型时只需添加新的子类，无需修改现有的税务计算逻辑，实现了"对扩展开放，对修改关闭"的设计原则。
+
+```java  
+// 普通收入父类（10%收税）  
+class Income {  
+    protected double income;  
+      
+    public Income(double income) {  
+        this.income = income;  
+    }  
+      
+    public double getTax() {  
+        return income * 0.1; // 税率10%  
+    }  
+}  
+  
+// 工资收入子类（阶梯收税）  
+class Salary extends Income {  
+      
+    public Salary(double income) {  
+        super(income);  
+    }   
+      
+    @Override  
+    public double getTax() {  
+        if (income <= 5000) {  
+            return 0;  
+        }  
+        return (income - 5000) * 0.2;  
+    }  
+}  
+  
+// 津贴收入子类（免税）  
+class StateCouncilSpecialAllowance extends Income {  
+    public StateCouncilSpecialAllowance(double income) {  
+        super(income);  
+    }  
+      
+    @Override  
+    public double getTax() {  
+        return 0;  
+    }  
+}
+
+// 主类：程序入口
+public class Demo {  
+    public static void main(String[] args) {  
+        // 给一个有普通收入、工资收入和享受国务院特殊津贴的小伙伴算税:  
+        Income[] incomes = new Income[] {  
+                new Income(3000),  
+                new Salary(7500),  
+                new StateCouncilSpecialAllowance(15000)  
+        };  
+        System.out.println(totalTax(incomes));  
+    }  
+      
+    public static double totalTax(Income... incomes) {  
+        double total = 0;  
+        // 特别注意这里，只需要逐个调用各个对象的getTax方法，编译器会自动按照对象调用各自的getTax方法
+        for (Income income: incomes) {  
+            total = total + income.getTax();  
+        }  
+        return total;  
+    }  
+} 
+```
+
+## 3.覆写Object方法
+
+Java中所有的类都继承自 `Object`，这个类定义了一些通用方法：
+
+- `toString()`：转换为字符串格式
+- `equals()`：判断两个对象是否相同
+- `hashCode()`：计算对象的哈希值
+
+我们也可以在自己的类中覆写这些方法（是不是有点像运算符重载）。
+
+```java
+class Person {  
+	...
+	
+	@Override
+    public boolean equals(Person other) {  
+        if (this.name == other.name) {  
+            return true;  
+        } else {  
+            return false;  
+        }  
+    }  
+}
+```
+
+（这段代码有多处错误，你发现了吗？）
+
+前面提到过，方法覆写需要定义完全相同的方法签名，其中包括了参数类型必须相同。所以这里需要改成 `Object` 类型。还要注意`Object` 类型不一定有 `name` 这么一个属性，需要向下转型成 `Person` 类才能确保可以比较。最后一个问题是 `String` 作为引用类型，需要调用 `equals` 方法来比较，不能使用 `==`。
+
+最终修改好之后的程序是这样的：
+
+```java
+class Person {  
+    String name;  
+  
+    public Person(String name) {  
+        this.name = name;  
+    }  
+  
+    @Override  
+    public boolean equals(Object other) {  
+        if (other instanceof Person) {  
+            if (this.name.equals(((Person) other).name)) {  
+                return true;  
+            }  
+        }  
+        return false;  
+    }  
+}  
+  
+  
+public class Demo {  
+    public static void main(String[] args) {  
+  
+        Person p1 = new Person("John");  
+        Person p2 = new Person("Jane");  
+  
+        System.out.println(p1.equals(p2));  
+    }  
+}
+
+// 输出结果：false
+```
 
 # 六、抽象类
 
+既然我们实现了多态，有的情况下子类各有各的实现方式，父类或许难以实现具体的方法来实现大一统，例如说描述各种动物的叫声。这个时候我们去掉父类方法的方法体肯定不行，去掉整个方法也不行，那咋办咧？
 
+办不成也得办，跟编译器玩抽象↓
+
+## 1. 抽象方法
+
+如果父类的方法本身不需要实现任何功能，仅仅是为了定义统一的方法签名，目的是让子类去覆写它，那么可以使用关键字 `abstract` 把父类的方法声明为**抽象方法**（类似于C++中的纯虚函数）：
+
+```java
+class Person {
+	public abstract void run();
+}
+```
+
+把一个方法声明为 `abstract` ，表示它是一个抽象方法，本身没有实现任何方法语句。
+
+## 2.抽象类
+
+实际上就算定义了抽象方法，还是有没解决的问题：抽象方法本身是无法执行的，所以 `Person` 类也无法被实例化。编译器会告诉我们，无法编译 `Person` 类，因为它包含抽象方法。
+
+那就干脆把 `Person` 类定义成抽象的，就引出了**抽象类**（类似于C++中的纯虚基类）：
+
+```java
+abstract class Person {
+	public abstract void run();
+}
+```
+
+抽象类可以强迫子类实现其定义的抽象方法，否则编译会报错。因此，抽象方法实际上相当于定义了“规范”。
 
 # 七、接口
 
+## 1.概述
 
+这里的“接口”并不是指用于接收网络请求的接口，而是在Java中特指定义类的一种范式。在抽象类中，抽象方法本质上是定义子类的规范，自身没有具体的方法和含义。这样的情况下，我们可以使用 `interface` 将其改写为**接口**：
 
+```java
+interface Person {
+	void run();
+	String getName();
+}
+```
+
+然后我们使用 `implements` 关键字，通过 `Person` 接口实现一个 `Student` 类：
+
+```java
+class Student implements Person {  
+    String name;  
+  
+    Student(String name) {  
+        this.name = name;  
+    }  
+  
+    public void run() {  
+        System.out.println("Student run");  
+    }  
+  
+    public String getName() {  
+        return name;  
+    }  
+}
+```
+
+需要注意的是，接口中不需要定义属性和构造函数，这些须在实现类中定义。一个类无法继承多个父类，但是可以实现多个接口。（接口是一种比抽象类更加抽象的存在。）
+
+## 2. 接口继承
+
+一个接口也可以继承自另一个接口。接口的继承同样使用 `extends` 关键字。若A继承B，A自动拥有B中定义的抽象方法。
+
+``` java
+interface Person {
+	String getName();
+}
+
+interface Studen extends Person {
+	String getClass();	
+	// 通过继承，该接口自动拥有getName()抽象方法
+}
+```
+
+## 3. default方法
+
+在接口中，可以定义 `default` 方法。例如，把 `Person` 接口的 `run()` 方法改为 `default` 方法：
+
+```java
+interface Person {  
+    String getName();  
+    default void run() {  
+        System.out.println(getName() + " is running.");  
+    }  
+}  
+  
+class Student implements Person {  
+    private String name;  
+    public Student(String name) {  
+        this.name = name;  
+    }  
+    public String getName() {  
+        return this.name;  
+    }  
+}  
+  
+public class Demo {  
+    public static void main(String[] args) {  
+  
+        Student s = new Student("John");  
+        s.run();  
+  
+    }  
+}
+
+// 输出：John is running.
+```
+
+实现类可以不必覆写 `default` 方法。 `default` 方法的目的是，当我们需要给接口新增一个方法时，需要给所有的子类也分别添加这个方法的具体实现。但如果新增的是 `default` 方法，相当是给全部子类都添加了这个方法；那么子类就不必全部修改，只需要在需要覆写的地方去覆写新增方法。 
+
+`default` 方法和抽象类的普通方法是有所不同的。因为接口中没有类的属性， `default`方法无法访问属性，而抽象类的普通方法可以访问实例的属性。
 # 八、静态字段和静态方法
 
+（Java中习惯将类的“属性”和“函数”分别称为“字段”和“方法”，考虑到专业术语这里沿用这种称呼，大家看多了也会习惯的。实际上这里）
 
+## 1.静态字段
+
+来考虑这样一个情景：
+
+一个班级中有很多位同学，都有自己的姓名等信息~~（这不废话么）~~，此时需要统计全班同学的人数。常见的思路是定义一个班级类 `Class`,将全班人数作为该类的一个属性进行处理。但是这样一来就会多定义一个不必要的类，同时还要在学生增减时关联 `Class` 类中属性的变化，既让代码变长了，还让不同类之间的耦合度变高了，不是一个很优雅的做法。
+
+当然会有同学想到使用全局的公共变量来存储这个字段，但是在实际项目中，非必要情况下不建议使用全局变量。全局变量暴露在整个项目或文件中可以访问，无法确保不会被其他的逻辑意外修改，不能实现数据保护。
+
+来看这样的写法：
+
+```java
+class Student {  
+    String name;  
+    static int number_of_stu;  
+  
+    Student(String name) {  
+        this.name = name;  
+        number_of_stu++;  
+    }  
+  
+    public void graduate() {  
+        number_of_stu--;  
+    }  
+}  
+  
+public class Demo {  
+    public static void main(String[] args) {  
+  
+        Student s1 = new Student("小明");  
+        System.out.println(s1.name + "同学进入班级后，学生人数为" + s1.number_of_stu);  
+  
+        Student s2 = new Student("小李");  
+        System.out.println(s2.name + "同学进入班级后，学生人数为" + s2.number_of_stu);  
+  
+        Student s3 = new Student("小张");  
+        System.out.println(s3.name + "同学进入班级后，学生人数为" + s3.number_of_stu);  
+  
+        s2.graduate();  
+        System.out.println(s3.name + "同学毕业后，学生人数为" + s3.number_of_stu);  
+    }  
+}
+
+/* 输出结果：
+小明同学进入班级后，学生人数为1
+小李同学进入班级后，学生人数为2
+小张同学进入班级后，学生人数为3
+小张同学毕业后，学生人数为2
+
+*/
+```
+
+通过 `static` 关键字声明人数为**静态字段**，实现了 `Student` 对象对于人数这一属性的**共享**，通过在类被构造和回收（Java中没有析构方法，而且不建议在回收时进行处理，因为这样做不稳定，于是在这个例子中应用了毕业的情景来实现人数的减少）时对静态字段进行处理，这样无论访问的是哪一个对象的静态字段，得到的都是它们共享的值。
+
+> 说句题外话，这个例子让我印象很深刻，因为它不仅展示了静态字段的特性和写法，还很好地展示了静态字段的使用场景。我们学习编程语言的一些特性时，**不仅要明白这些技术是什么，怎么写；更应该思考为什么这样做，什么情况下需要这样做。** 后者带来的是程序设计思想的提升和进阶，能够让我们在面对一些复杂的情境下仍然能写出优雅精简的程序，快准狠地解决实际问题。
+
+## 2.静态方法
+
+有静态字段，就有静态方法。用 `static` 修饰的方法称为静态方法。调用实例方法必须通过一个实例变量，而调用静态方法则不需要实例变量，通过类名就可以调用。
+
+因为静态方法属于 `class` 而不属于实例，因此，静态方法内部，无法访问 `this` 变量，也无法访 问实例字段，它只能访问静态字段。 当然，通过实例变量也可以调用静态方法。
+
+静态方法经常用于工具类。例如：
+
+- Arrays.sort()
+- Math.random()
+
+静态方法也经常用于辅助方法。注意到Java程序的入口 `main()` 也是静态方法。
 
 # 九、包
 
