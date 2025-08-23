@@ -895,50 +895,337 @@ public class Demo {
 
 静态方法也经常用于辅助方法。注意到Java程序的入口 `main()` 也是静态方法。
 
+## 3.接口的静态字段
+
+接口作为纯抽象类，无法定义普通的属性，但是可以定义静态字段。静态字段在接口中必须声明为 `final` 类型：
+
+```java
+public interface Person {
+	puiblic static final String GENDER = "female";
+	// 也可以简写成 String GENDER = "FEMALE";
+}
+```
+
 # 九、包
 
+## 1.概述
 
+有时两个开发者定义了相同的类名，就会产生冲突。为了解决这种冲突，可以考虑使用一种方法来限定类的作用范围，在C++中称之为**命名空间**，Java中则称之为**包**。
+
+Java推荐使用包将不同模块的类放到不同的文件中，根据文件夹的组织形式定义包的名称，在文件的第一行使用 `package` 关键字定义包名，然后在包中将类定义为 `public`。
+
+例如，小明和小军一起进行开发，他们都定义了Person这个类，文件夹的组织形式如下：
+
+```
+Demo_project
+└─ src
+	├─ Demo.java
+	├─ jun
+	│    └─ Person.Java  
+	├─ components
+	│    └─ ming
+			└─ Person.java
+```
+
+那么，小军的Person.Java应该这样写：
+
+```java
+package jun;
+
+public class Person {...}
+```
+
+```java
+package conponents.ming;
+
+public class Person {...}
+```
+
+从这个例子中可以看出包可以是多层结构，用 `.` 隔开。例如： `java.util`。但是需要注意包没有父子的关系，如 `java.util` 和 `java.util.zip` 是不同的包，两者之间没有继承关系。
+
+一个类总是属于某个包的。如果没有声明，这个类就属于默认包。类的完整名称是 `包.类` ,JVM根据这个完整的名称来辨识不同包中的类。即只要包不同，即使类名相同也，不是同一个类。
+
+## 2.包作用域
+
+位于同一个包的类，可以访问包作用域的字段和方法。不用 `public` 、 `protected` 、 `private` 修饰的字段和方法就是包作用域。
+
+## 3.包的导入
+
+有时我们需要在一个包中使用另一个包中的类，这时就需要使用 `import` 导入另外的包了。有三种导入方法：
+
+### ① 直接写完整类名
+
+```java
+conponents.ming person = new conponents.ming.Person();
+```
+
+### ② 使用 import 语句
+
+```java
+package jun;
+import conponents.ming.Person;
+
+Person person = new Person();
+```
+
+这里可以使用通配符 `*` 来导入包中的所有类,如 `import conponents.ming.*;`
+
+### ③ 导入另一个包的静态方法和静态字段
+
+```java
+package jun;
+import static conponents.ming.Person;
+```
+
+这种方式使用得较少。
+
+## 4.避免包的重名
+
+通常为了防止出现包的重名，需要确定包名唯一，一般使用域名反写：
+
+```
+org.apache
+come.xiaomi.bluetooth
+top.morely.blog
+```
+
+也要注意不要与Java中已有的类和重名：
+
+- String
+- System
+- Runtime
+- java.util.List
+- java.text.Format
+- java.math.BigInteger
+- ...
 
 # 十、作用域
 
+与C++类似，类中的字段和方法有 `public` 、 `private` 以及 `protected` 三种，`public` 可以在类外访问，`private` 只能在类内访问，而 `protected` 多用于在继承中将方法或字段暴露给子类。
 
+另外，包作用域是指一个类允许访问同一个包的没有 `public`、`private` 修饰的 `class` ，以及没有 `public`、`protected`、`private` 修饰的字段和方法。
 
+在方法内部定义的变量称为**局部变量**，局部变量作用域从变量声明处开始到对应的块结束。方法参数也是局部变量。Java中不建议使用全局变量，这样做不利于模块化以及数据保护。
+
+我们来回顾一下 `final` 这个修饰符，它在数据保护中有“终止”的意味，包括终止类的继承、禁止子类复写、禁止重新赋值（定义常量）等。
 # 十一、内部类
 
+在Java程序中，通常情况下，我们把不同的类组织在不同的包下面，对于一个包下面的类来说，它们是在同一层次，没有父子关系。有些情况下，我们也会将一个类放在另一个类的内部进行定义，这个类就称为**内部类**（Inner Class）。
 
+## 1.内部类的声明与实例化
+
+内部类无法单独存在，必须依附于一个Outer Class（外部类），类似于这个外部类的一个属性。也就是说，实例化内部类之前必须先实例化内部类：
+
+```java
+class Person {  
+    String name;  
+  
+    Person(String name) {  
+        this.name = name;  
+    }  
+  
+    class Student {  
+        void showName() {  
+            System.out.println("学生的姓名为：" + name);  
+        }  
+    }  
+  
+}  
+public class Demo {  
+    public static void main(String[] args) {  
+  
+        Person p = new Person("张三");  
+        // 注意看内部类是如何初始化的：
+        Person.Student s = p.new Student();  
+  
+        s.showName();  
+  
+    }  
+}
+
+// 输出结果： 学生的姓名为：张三
+```
+
+注意内部类的实例化写法是：`外部类.内部类 内部对象名 = 外部对象.new 内部类构造方法();`。内部类作为外部类的一个字段，可以访问外部类的 `private` 属性和方法。
+
+## 2.匿名类
+
+在类的方法内部，定义一个**匿名类**（Anonymous Class），也会定义一个内部类。
+
+```java
+import java.util.HashMap;
+
+public class Demo {
+	public static void main(String[] args) {
+		HashMap<String, String> map1 = new HashMap<>();
+		HashMap<String, String> map2 = new HashMap<>() {}; // 这里是匿名类
+		HashMap<String, String> map3 = new HashMap<>() {
+			{
+				put("A", "1");
+				put("B", "2");
+			}
+		};
+		System.out.println(map3.get("A"));
+	}
+}
+
+```
+
+`map1` 是一个普通的 `HashMap` 实例，但 `map2` 是一个匿名类实例，只是该匿名类继承自 `HashMap`。`map3` 也是一个继承自 `HashMap` 的匿名类实例，并且添加了 `static` 代码块来初始化数据。观察编译输出可发现 `Main$1.class` 和 `Main$2.class` 两个匿名类文件。
+
+## 3.静态内部类
+
+使用 `static` 定义的内部类称为静态内部类（Static Nested Class）。用 `static` 修饰的内部类和普通内部类有很大的不同，它不再依附于外部类的实例对象，而是一个完全独立的类，因此无法引用 `Outer.this` ，但它可以访问外部类的 `private` 静态字段和静态方法。如果把静态内部类移到外部类之外，就失去了访问 `private` 的权限。
 
 # 十二、classpath和jar
 
+## 1.Classpath
 
+`classpath` 是JVM用到的一个环境变量，它用来指示JVM如何搜索定义的类。现代使用的IDE如Eclipse、Intellij IDEA会自动配置这个变量，这里就不深入学习了，简单概括一下廖老师的文章；大家感兴趣的话可以研究一下，[点击访问原文地址](https://liaoxuefeng.com/books/java/oop/basic/classpath-jar/)：
+
+### ① classpath的作用
+
+- classpath是JVM用于搜索**编译后的.class文件**的**环境变量**（一组目录集合）。
+- JVM根据 `classpath` 中的路径来查找需要加载的类（例如`abc.xyz.Hello`对应`abc/xyz/Hello.class`）。
+- 搜索顺序是**从左到右**，一旦找到就停止搜索；如果所有路径都未找到，则报错。
+
+### ② classpath的格式
+
+- **Windows**：用分号`;`分隔，含空格的路径需用双引号括起（示例：`.;C:\work\bin;"D:\My Documents\bin"`）。
+- **Linux/Mac**：用冒号`:`分隔（示例：`.:/usr/shared:/home/user/bin`）。
+
+### ③ 设置classpath的两种方式
+
+- **不推荐**：在系统环境变量中设置classpath（会污染系统环境）。
+- **推荐**：启动JVM时通过`-classpath`（或`-cp`）参数指定（仅对当前进程有效）。  
+
+```bash
+java -cp .;C:\work\bin;C:\shared abc.xyz.Hello
+```
+
+- **默认行为**：如果不设置任何classpath，JVM默认使用当前目录（`.`）作为classpath。
+
+### ④ 重要注意事项
+
+- **无需添加Java核心库**（如`rt.jar`）：JVM会自动加载核心库（例如`String`、`ArrayList`等），手动添加反而可能导致问题。
+- **IDE的处理**：IDE（如Eclipse、IntelliJ IDEA）会自动设置classpath（通常包括项目的`bin`目录和依赖的jar包）。
+- **目录结构必须匹配包名**：  
+    例如，类`com.example.Hello`必须位于`com/example/Hello.class`。  
+    如果当前目录是`C:\work`，则完整路径应为`C:\work\com\example\Hello.class`，并使用命令：
+
+```bash
+java -cp . com.example.Hello
+``` 
+
+### ⑤ 实操建议
+
+- **避免设置系统级classpath**，始终通过`-cp`参数传递。
+- **默认使用当前目录（`.`）** 通常足够满足大部分场景。
+- **确保目录结构与包名一致**，否则JVM无法找到类。
+
+## 2.jar包
+
+此部分忽略，实际项目中通常使用比较成熟的构建工具（如maven）来打包。
 
 # 十三、class版本
 
+通常我们提到的Java 8，Java11，Java 21；指的是Java的**JDK版本**
 
+在cmd中执行命令 `java -version`，返回的是JDK的版本,也是JVM的版本，即 `Java.exe` 的版本。
+
+![](20250823165958211.png#bc)
+
+每个版本的JVM执行的class文件（字节码文件）版本也不同。例如，Java 11对应的class文件版本是55，而Java 17对应的class文件版本是61。Java是向下兼容的，即使用旧版本JDK编写的程序和字节码能在高版本的JVM上执行，而高版本的Java通常定义了新的方法和语句，新版本JDK编写的程序和字节码可能难以在旧版本的JVM上运行。
 
 # 十四、模块
 
+为了实现Java的模块化，从Java 9开始，原有的Java标准库已经由一个单一巨大的 `rt.jar` 分拆成了几十个模块，这些模块以 `.jmod` 扩展名标识，可以在 `$JAVA_HOME/jmods` 目录下找到它们：
+
+- java.base.jmod
+- java.compiler.jmod
+- java.datatransfer.jmod
+- java.desktop.jmod
+- ...
+
+把一堆class封装为jar仅仅是一个打包的过程，而把一堆class封装为模块则不但需要打包，还需要写 入依赖关系，并且还可以包含二进制代码（通常是JNI扩展）。此外，模块支持多版本，即在同一个 模块中可以为不同的JVM提供不同的版本。
+
+这里**模块的编写、运行以及JRE打包**暂时忽略，以后需要使用时再来学习。
 
 
 <center><h1>第二节 Java核心类</h1></center>
 
 # 一、字符串和编码
 
+## 1.String类
 
+在Java中， `String` 是一个引用类型，它本身也是一个类，可以由构造方法定义一个字符串实例。但是Java编译器对 `String` 有特殊处理，可以直接用双引号 `""` 来定义一个字符串。
 
-# 二、StringBuilder
+```Java
+String s1 = "Hello";
+String s2 = new String(new char[] {'H', 'e', 'l', 'l', 'o', '!'});
+```
 
+## 2.String类的常用方法
 
+String类型已在前文探讨过，此处只补充一些实用的方法。
 
-# 三、StringJoiner
+### ① trim():去除首尾的空白字符
 
+```java
+" \tHello\r\n ".trim(); // 得到"Hello"
+```
 
+这里的空白字符不仅包含空格，还包含`\t`、`\r`以及`\n`等转义字符。
+
+另外 `strip()` 方法也用于去除空白符，但也会移除中文空格"\u3000"等字符。
+
+### ② 字符串与char\[]的转换
+
+```java
+char[] cs = "Hello".toCharArray(); // String -> char[] 
+String s = new String(cs); // char[] -> String
+```
+
+这里需要注意的是，使用 `toCharArray()` 将字符串转换成数组后对数组进行处理，原来的字符串不会变化。这样做其实也好理解，字符串作为不可变的类型，没有实现变化内容的方法。这里的转换更多是复制拷贝，而不是将两个变量关联起来。
+
+StringBuilder、StringJoiner这两个对象已在前文提过，这里不再赘述。
 
 # 四、包装类型
 
+Java中的数据分为两种：
 
+- 基本类型：`byte`、`byte`，`short`，`int`，`long`，`boolean`，`float`，`double`，`char`；
+- 引用类型：基于类和接口的数据类型，如 `String`。
+
+引用类型可以赋值为`null`，表示空，但基本类型不能赋值为`null`
+
+想要实现以引用类型的方式来处理基本类型，我们可以将其包装成类。如定义 `Int` 类，让它只包含一个字段 `private int value = 0;` 。这样一来，`Int` 类就可以视为 `int` 的包装类。实际上无需我们来进行包装，Java的核心库已经定义好了这些基本类型对顶的包装类型：
+
+|基本类型|对应的引用类型|
+|---|---|
+|boolean|java.lang.Boolean|
+|byte|java.lang.Byte|
+|short|java.lang.Short|
+|int|java.lang.Integer|
+|long|java.lang.Long|
+|float|java.lang.Float|
+|double|java.lang.Double|
+|char|java.lang.Character|
+
+这些包装对象都是不可变的，对他们进行比较也不能使用 `a == b`，应该使用 `a.equals(b)`。 
+
+## 静态工厂方法
+
+`Integer` 类有一个方法 `ValueOf()`，会将输入转换成一个 `Integer` 对象。使用此方法也可以同来创建 `Integer` 类的对象：
+
+```java
+Integer n = new Integer(100);
+Integer n = Integer.valueOf(100);
+```
+
+这两种写法几乎等效，但是下面的更好，]]
 
 # 五、JavaBean
-
 
 
 # 六、枚举类
