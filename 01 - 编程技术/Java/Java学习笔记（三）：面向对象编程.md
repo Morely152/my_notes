@@ -1231,19 +1231,131 @@ Integer n = Integer.valueOf(100);
 
 很多情况下，我们将类的属性设置为`private`，并且使用 `public` 方法来暴露读取或修改属性的“接口”，如 `getXxx()` 和 `setXxx()`。
 
-如果一个类满足这些特点，我们可以说它是一个 `JavaBean`：
+## 1.JavaBean概述
+
+如果一个类满足这些特点，我们可以说它是一个 `JavaBean`（看到这个词我的第一印象是咖啡豆？）：
 
 - 拥有无参的公共构造函数
 - 所有的属性均为 `private`
 - 提供了 `public` 的属性读写方法，并且命名成 `getXxx()` 及 `SetXxx()` 的形式
 
+对于 `boolean` 类型的字段，读写方法应该是这种格式：
+
+```java
+// 读方法：
+public boolean isDone() {...}
+// 写方法：
+public void setDone() {...}
+```
+
+我们通常把一组对应的读方法（`getter`）和写方法（`setter`）称为属性（`property`）。只有`getter`的属性称为只读属性（read-only），只有`setter`的属性称为只写属性（write-only）。
+
+只读属性比较常见，而只写属性就相对很少使用了。
+
+这里之所以把这两个读写方法称之为属性而不是方法，是因为只需要定义 `getter` 和 `setter`，即可，不一定要有对应的字段，如：
+
+```java
+public class Person {
+    private String name;
+    private int age;
+
+    public String getName() { return this.name; }
+    public void setName(String name) { this.name = name; }
+
+    public int getAge() { return this.age; }
+    public void setAge(int age) { this.age = age; }
+
+    public boolean isAdult() {
+        return age >= 18;
+    }
+}
+```
+
+这里可以直接通过 `isAdult()`，根据类中的 `age` 字段判断是否为成年人，而无需再添加一个 `boolean` 类型的字段，这样看来 `isAdult()` 更像是标记了类的一种**属性**。正是由于对应的字段可能是虚拟的（或者说是间接的），这样的读写（主要是读取）更像是在操作类的一种属性，所以这里更倾向于认为它是一种属性而不是方法。
+
+## 2.JavaBean的作用
+
+JavaBean主要用来传递数据，即把一组数据组合成一个JavaBean便于传输。此外，JavaBean可以方便地被IDE工具分析，生成读写属性的代码，主要用在图形界面的可视化设计中。在IDE中也可以快速生成 `getter` 和 `setter`。
+
 # 六、枚举类
 
+枚举的基础知识已经在前文介绍过了，这里结合面向对象进行一些拓展：
 
+## 1.枚举也是一种类型
+
+通过 `enum` 定义的枚举也是一个 `class`，并且与其他的类没有很大的差异，主要具有以下几个特点：
+
+- 定义的 `enum` 类型总是继承自 `java.lang.Enum`，且无法被继承；
+- 只能定义出 `enum` 的实例，而无法通过 `new` 操作符创建`enum` 的实例；
+- 定义的每个实例都是引用类型的唯一实例；
+- 可以将 `enum` 类型用于 `switch` 语句。
+
+```java
+// 我们定义的enum:
+public enum Color {
+    RED, GREEN, BLUE;
+}
+
+// 编译器编译出的class:
+public final class Color extends Enum { // 继承自Enum，标记为final class
+    // 每个实例均为全局唯一:
+    public static final Color RED = new Color();
+    public static final Color GREEN = new Color();
+    public static final Color BLUE = new Color();
+    // private构造方法，确保外部无法调用new操作符:
+    private Color() {}
+}
+```
+
+我们可以使用这些方法对枚举进行操作，或者获取枚举的信息：
+
+- name():返回枚举项的名称
+- ordinal():返回枚举项的编号
+- toString():返回枚举项的名称，但是可以进行覆写（不建议用于判断枚举项名称，可以覆写后用于优化输出格式）
+
+```java
+enum Color {  
+    RED("红色"), BLUE("蓝色"), GREEN("绿色");  
+  
+    private final String color_name;  
+  
+    private Color(String color_name) {  
+        this.color_name = color_name;  
+    }  
+  
+    @Override  // 重写 toString 方法
+    public String toString() {  
+        return color_name;  
+    }  
+}  
+  
+  
+public class Demo {  
+    public static void main(String[] args) {  
+  
+        System.out.println(Color.RED.ordinal());  
+        System.out.println(Color.BLUE.name());  
+        System.out.println(Color.GREEN.name() + "是" + Color.GREEN.toString());  
+    }  
+}
+
+/* 输出： 
+0
+BLUE
+GREEN是绿色
+*/
+```
 
 # 七、记录类
 
+使用`String`、`Integer`等类型的时候，这些类型都是不变类，一个不变类具有以下特点：
 
+1. 定义class时使用`final`，无法派生子类；
+2. 每个字段使用`final`，保证创建实例后无法修改任何字段。
+
+观察不变类的共性，它们通常具有这些特点：
+
+1. 类是 `final` 的，字段也是 ``
 
 # 八、BigInteger
 
@@ -1255,3 +1367,7 @@ Integer n = Integer.valueOf(100);
 
 # 十、常用工具类
 
+--- 
+# 参考资料
+
+[^1]: 廖雪峰的官方网站.Java教程\[EB/OL].(2025-06-07)\[2025-08-21]. https://www.cnblogs.com/echolun/p/12709761.html
