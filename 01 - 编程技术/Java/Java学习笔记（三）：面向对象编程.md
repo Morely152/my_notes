@@ -60,9 +60,9 @@ fetchClothes(person, machine);
 	- 枚举
 	- 常用工具类
 
-最后同样需要提醒的是，即使学习了面向对象这个程序设计的思想，也不能保证能找到对象🤣。
+最后同样需要提醒的是，即使学习了面向对象的程序设计思想，也不能保证能找到对象🤣。
 
-![](20250821160749656.png)
+![](20250821160749656.png#sc)
 
 # 二、面向对象基础
 
@@ -1353,17 +1353,204 @@ GREEN是绿色
 1. 定义class时使用`final`，无法派生子类；
 2. 每个字段使用`final`，保证创建实例后无法修改任何字段。
 
-观察不变类的共性，它们通常具有这些特点：
+## 1.record类
 
-1. 类是 `final` 的，字段也是 ``
+Java 14之后，我们可以使用 `record` 类定义一个记录类：
+
+```java
+// 定义记录类：
+record Point(int x, int y) {}
+
+// 相当于这样写：
+final class Point extends Record {
+    private final int x;
+    private final int y;
+
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int x() {
+        return this.x;
+    }
+
+    public int y() {
+        return this.y;
+    }
+
+    public String toString() {
+        return String.format("Point[x=%s, y=%s]", x, y);
+    }
+
+    public boolean equals(Object o) {
+        ...
+    }
+    public int hashCode() {
+        ...
+    }
+}
+```
+
+可以看到，除了用 `final` 修饰class以及每个字段外，编译器还自动为我们创建了构造方法，和字段名同名的方法，以及覆写 `toString()`、`equals()` 和 `hashCode()` 方法（良心大大的好啊）。
+
+使用`record`关键字，可以一行写出一个不变类。和`enum`类似，我们自己不能直接从`Record`派生，只能通过`record`关键字由编译器实现继承。
+
+## 2.记录类的构造
+
+我们也可以手动修改构造类，比如说加上发现参数非法就抛出异常的处理：
+
+```java
+record Point(int x, int y) {  
+    Point {  
+        if (x < 0 || y < 0) {  
+            throw new IllegalArgumentException("坐标参数不能为负");  
+        }  
+    }  
+}  
+  
+public class Demo {  
+    public static void main(String[] args) {  
+        Point p = new Point(-1, -1);  
+    }  
+}
+
+// 输出：Exception in thread "main" java.lang.IllegalArgumentException: 坐标参数不能为负
+```
+
+## 3.添加静态方法
+
+通常我们定义一个 `of()` 静态方法，用于创建类对应的实例：
+
+```java
+public record Point(int x, int y) {
+    public static Point of() {
+        return new Point(0, 0);
+    }
+    public static Point of(int x, int y) {
+        return new Point(x, y);
+    }
+}
+```
+
+这样我们可以通过 `var p = Point.of(1,2);` 来实例化一个类的对象，大家看出来这属于前文提到的静态工厂方法了吗？这样做有利于节省内存和提升性能，是一种推荐的做法。
 
 # 八、BigInteger
 
+如果我们在开发数据量很大的项目（人口统计系统、银行储蓄管理系统等）时，或许会超过 `long` 类型的表示范围。
 
+在Java中，可以通过 `Java.math.BigInteger` 表示任意大小的整数。其内部通过 `int[]` 数组来模拟一个很大很大的整数。
+
+```java
+BigInteger bi = new BigInteger("1234567890");
+System.out.println(bi.pow(5)); // 2867971860299718107233761438093672048294900000
+```
+
+## 1.BigInteger的计算
+
+对`BigInteger`做运算的时候，只能使用实例方法。下表列出了 `BigInteger` 的常用运算方法；无需记忆，用时查表即可。
+
+| 类别       | 方法签名                                                   | 描述                                                            |
+| -------- | ------------------------------------------------------ | ------------------------------------------------------------- |
+| **算术运算** | `BigInteger add(BigInteger val)`                       | 返回 `this + val` 的和                                            |
+|          | `BigInteger subtract(BigInteger val)`                  | 返回 `this - val` 的差                                            |
+|          | `BigInteger multiply(BigInteger val)`                  | 返回 `this * val` 的积                                            |
+|          | `BigInteger divide(BigInteger val)`                    | 返回 `this / val` 的商（整数除法）                                      |
+|          | `BigInteger[] divideAndRemainder(BigInteger val)`      | 返回一个数组，包含 `[商, 余数]`                                           |
+|          | `BigInteger remainder(BigInteger val)`                 | 返回 `this % val` 的余数                                           |
+| **模运算**  | `BigInteger mod(BigInteger m)`                         | 返回 `this mod m`（模数必须为正数）                                      |
+|          | `BigInteger modPow(BigInteger exponent, BigInteger m)` | 返回 `(this^exponent) mod m`                                    |
+|          | `BigInteger modInverse(BigInteger m)`                  | 返回 `this^(-1) mod m`（乘法逆元）                                    |
+| **位运算**  | `BigInteger and(BigInteger val)`                       | 返回 `this & val`（按位与）                                          |
+|          | `BigInteger or(BigInteger val)`                        | 返回 `this \| val`（按位或）                                         |
+|          | `BigInteger xor(BigInteger val)`                       | 返回 `this ^ val`（按位异或）                                         |
+|          | `BigInteger not()`                                     | 返回 `~this`（按位取反）                                              |
+|          | `BigInteger shiftLeft(int n)`                          | 返回 `this << n`（左移n位）                                          |
+|          | `BigInteger shiftRight(int n)`                         | 返回 `this >> n`（算术右移n位）                                        |
+| **比较运算** | `int compareTo(BigInteger val)`                        | 比较大小。返回负数、零或正数，分别表示 `this < val`, `this == val`, `this > val` |
+|          | `boolean equals(Object x)`                             | 判断值是否相等（与`compareTo`一致，不同于`==`）                               |
+| **其他运算** | `BigInteger abs()`                                     | 返回绝对值                                                         |
+|          | `BigInteger negate()`                                  | 返回相反数 (`-this`)                                               |
+|          | `BigInteger pow(int exponent)`                         | 返回 `this^exponent`（指数）                                        |
+|          | `BigInteger gcd(BigInteger val)`                       | 返回 `this` 和 `val` 的最大公约数 (GCD)                                |
+|          | `BigInteger sqrt()`                                    | 返回 `this` 的整数平方根                                              |
+|          | `BigInteger nextProbablePrime()`                       | 返回第一个大于 `this` 的素数（概率性）                                       |
+|          | `boolean isProbablePrime(int certainty)`               | 判断此 BigInteger 是否为素数（概率性测试）                                   |
+### 重要说明：
+
+1. **不可变性 (Immutability)**：`BigInteger` 和 `BigDecimal` 对象是**不可变的**。所有上述方法执行运算后都会**返回一个全新的对象**，原来的对象值不会被修改。
+2. **静态常量**：`BigInteger` 类提供了常用的静态常量，方便使用：
+
+    - `BigInteger.ZERO`：表示数字0；
+    - `BigInteger.ONE`：表示数字1；
+    - `BigInteger.TWO`：表示数字2；
+    - `BigInteger.TEN`：表示数字10。        
+
+3. **性能考量**：由于不可变性和任意精度，`BigInteger` 的运算开销远大于基本数据类型（如 `int`, `long`）。应在确实需要处理大整数时才使用它。
+4. **素数测试**：`nextProbablePrime()` 和 `isProbablePrime()` 方法中使用的是概率性测试（米勒-拉宾算法）。参数 `certainty` 表示对确定度的衡量，值越大，结果是素数的概率越高，但计算时间也更长。
+
+## 2.类型转换
+
+```java
+BigInteger i = new BigInteger("123456789000");
+System.out.println(i.longValue()); // 123456789000
+System.out.println(i.multiply(i).longValueExact()); // java.lang.ArithmeticException: BigInteger out of long range
+```
+
+使用`longValueExact()`方法时，如果超出了`long`型的范围，会抛出`ArithmeticException`。
+
+`BigInteger`和`Integer`、`Long`一样，也是不可变类，并且也继承自`Number`类。因为`Number`定义了转换为基本类型的几个方法：
+
+- 转换为`byte`：`byteValue()`
+- 转换为`short`：`shortValue()`
+- 转换为`int`：`intValue()`
+- 转换为`long`：`longValue()`
+- 转换为`float`：`floatValue()`
+- 转换为`double`：`doubleValue()`
+
+如果`BigInteger`表示的范围超过了基本类型的范围，转换时将丢失高位信息，即结果不一定是准确的。如果需要准确地转换成基本类型，可以使用`intValueExact()`、`longValueExact()`等方法，在转换时如果超出范围，将直接抛出`ArithmeticException`异常。
+
+如果`BigInteger`的值甚至超过了`float`的最大范围（3.4x1038），会返回无限值 `infinity`
 
 # 九、BigDecimal
 
+和`BigInteger`类似，`BigDecimal`可以表示一个任意大小且精度完全准确的浮点数。
 
+``` java
+BigDecimal bd = new BigDecimal("123.4567");
+System.out.println(bd.multiply(bd)); // 15241.55677489
+```
+
+可以使用 `scale()` 方法获取小数的位数。如果一个`BigDecimal`的`scale()`返回负数，例如，`-2`，表示这个数是个整数，并且末尾有2个0。
+
+对`BigDecimal`做加、减、乘时，精度不会丢失，但是做除法时，存在无法除尽的情况，这时，就必须指定精度以及如何进行截断：
+
+```java
+BigDecimal d1 = new BigDecimal("123.456");
+BigDecimal d2 = new BigDecimal("23.456789");
+BigDecimal d3 = d1.divide(d2, 10, RoundingMode.HALF_UP); // 保留10位小数并四舍五入
+BigDecimal d4 = d1.divide(d2); // 报错：ArithmeticException，因为除不尽
+```
+
+还可以对`BigDecimal`做除法的同时求余数：
+
+```java
+import java.math.BigDecimal;
+
+public class Demo {
+    public static void main(String[] args) {
+        BigDecimal n = new BigDecimal("12.345");
+        BigDecimal m = new BigDecimal("0.12");
+        BigDecimal[] dr = n.divideAndRemainder(m);
+        System.out.println(dr[0]); // 102
+        System.out.println(dr[1]); // 0.105
+    }
+}
+```
+
+调用`divideAndRemainder()`方法时，返回的数组包含两个`BigDecimal`，分别是商和余数，其中商总是整数，余数不会大于除数。
+
+需要注意的是，在比较两个`BigDecimal`的值是否相等时，要特别注意，使用`equals()`方法不但要求两个`BigDecimal`的值相等，还要求它们的`scale()`，即小数点后的位数相等。
 
 # 十、常用工具类
 
