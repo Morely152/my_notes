@@ -1,5 +1,5 @@
-> 声明：本篇笔记部分摘自[《Java核心技术（卷Ⅰ） - 机械工业出版社》](https://detail.tmall.com/item.htm?ali_refid=a3_420434_1006%3A1151895243%3AN%3AoB1xLXSDdjSpCunkFwpZbCtvD%2B6YEaA9%3A39f8fcdda956d1ec63523e9a6e9e2355&id=708821240842&mi_id=0000mg2-P7Ustbzeym2_6DxuUMLCpndkVCAGc5EaA_l8QQ0&mm_sceneid=1_0_128421313_0&priceTId=2147831a17554253371677975e1dca&spm=a21n57.1.hoverItem.2&utparam=%7B%22aplus_abtest%22%3A%226b956865e0df43cd4a6620880d877f11%22%7D&xxc=ad_ztc)，遵循[CC BY 4.0协议](https://creativecommons.org/licenses/by/4.0/legalcode.zh-hans)。
-> 存在由AI生成的小部分内容，仅供参考，请仔细甄别可能存在的错误。
+> 声明：本篇笔记部分摘自[《Java核心技术（卷Ⅰ） - 机械工业出版社》](https://detail.tmall.com/item.htm?ali_refid=a3_420434_1006%3A1151895243%3AN%3AoB1xLXSDdjSpCunkFwpZbCtvD%2B6YEaA9%3A39f8fcdda956d1ec63523e9a6e9e2355&id=708821240842&mi_id=0000mg2-P7Ustbzeym2_6DxuUMLCpndkVCAGc5EaA_l8QQ0&mm_sceneid=1_0_128421313_0&priceTId=2147831a17554253371677975e1dca&spm=a21n57.1.hoverItem.2&utparam=%7B%22aplus_abtest%22%3A%226b956865e0df43cd4a6620880d877f11%22%7D&xxc=ad_ztc)及[Java教程-廖雪峰-2025-06-16](https://liaoxuefeng.com/books/java/introduction/index.html)，遵循[CC BY 4.0协议](https://creativecommons.org/licenses/by/4.0/legalcode.zh-hans)。
+> 存在由AI生成的小部分内容，仅供参考，请仔细甄别可能存在的错误。笔记中有一些代码例子沿用了廖老师的示例，这里为了方便读者运行示例，将主类名称改成了统一的 `Demo`。如涉及侵权请联系我反馈，我会尽快将其删除。
 
 终于啃下了面向对象这一个大难关，我们后面篇幅也可以短一些了，学轻松一点吧：
 
@@ -107,7 +107,7 @@ public class Demo {
 
 ![](20250825010857908.png#bc)
 
-（感谢蒋老师的图示，这样表示清晰多了，而且画起来估计也挺费时间的…）
+（感谢廖老师的图示，这样表示清晰多了，而且画起来估计也挺费时间的…）
 
 从继承关系可知：`Throwable`是异常体系的根，它继承自`Object`。`Throwable`有两个体系：`Error`和`Exception`，`Error`表示严重的错误，程序对此一般无能为力，例如：
 
@@ -270,4 +270,58 @@ Java断言的特点是：断言失败时会抛出`AssertionError`，导致程序
 
 在进行开发时，我们经常会通过 `System.out.println()`来打印某个变量的值，以便随着程序的运行观察和调试。
 
-但是代码修改完成，准备编译发行版本是又需要去掉这些输出语句；后面调试时又需要给它们添加回来（将大象放进冰箱），非常的繁琐。
+但是代码修改完成，准备编译发行版本是又需要去掉这些输出语句；后面调试时又需要给它们添加回来（将大象放进冰箱？），非常的繁琐。
+
+一个好的解决方案是使用日志。输出日志，而不是用`System.out.println()`，有以下几个好处：
+
+1. 可以设置输出样式，避免自己每次都写`"ERROR: " + var`；
+2. 可以设置输出级别，禁止某些级别输出。例如，只输出错误日志；
+3. 可以被重定向到文件，这样可以在程序运行结束后查看日志；
+4. 可以按包名控制日志级别，只输出某些包打的日志；
+5. ……
+
+因为Java标准库内置了日志包`java.util.logging`，我们可以直接用。先看一个简单的例子：
+
+```java
+import java.util.logging.Logger;  
+  
+public class Demo {  
+    public static void main(String[] args) {  
+        Logger logger = Logger.getGlobal();  
+        logger.info("启动程序中...");  
+        logger.warning("内存已被占满。");  
+        logger.fine("程序运行正常。");  
+        logger.severe("进程已结束。");  
+    }  
+}
+```
+
+运行上述代码，得到类似如下的输出（Intellij IDEA环境）：
+
+```log
+8月 25, 2025 2:06:39 下午 Demo main
+信息: 启动程序中...
+8月 25, 2025 2:06:40 下午 Demo main
+警告: 内存已被占满。
+8月 25, 2025 2:06:40 下午 Demo main
+严重: 进程已结束。
+```
+
+对比可见，使用日志最大的好处是，它自动打印了时间、调用类、调用方法等很多有用的信息。
+
+再仔细观察发现，4条日志只打印了3条，`logger.fine()`没有打印。这是因为日志的输出可以设定级别。JDK的Logging定义了7个日志级别，从严重到普通：
+
+- SEVERE
+- WARNING
+- INFO
+- CONFIG
+- FINE
+- FINER
+- FINEST
+
+日志记录的默认级别是INFO，因此，INFO级别以下的日志，不会被打印出来。使用日志级别的好处在于，调整级别，就可以屏蔽掉很多调试相关的日志输出。
+
+--- 
+# 参考资料
+
+[^1]: 廖雪峰的官方网站.Java教程\[EB/OL].(2025-06-07)\[2025-08-21]. https://www.cnblogs.com/echolun/p/12709761.html
