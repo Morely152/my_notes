@@ -2,8 +2,10 @@
 
 ---
 --- 
-> 声明：本篇笔记部分摘自[《Java核心技术（卷Ⅰ） - 机械工业出版社》](https://detail.tmall.com/item.htm?ali_refid=a3_420434_1006%3A1151895243%3AN%3AoB1xLXSDdjSpCunkFwpZbCtvD%2B6YEaA9%3A39f8fcdda956d1ec63523e9a6e9e2355&id=708821240842&mi_id=0000mg2-P7Ustbzeym2_6DxuUMLCpndkVCAGc5EaA_l8QQ0&mm_sceneid=1_0_128421313_0&priceTId=2147831a17554253371677975e1dca&spm=a21n57.1.hoverItem.2&utparam=%7B%22aplus_abtest%22%3A%226b956865e0df43cd4a6620880d877f11%22%7D&xxc=ad_ztc)及[Java教程-廖雪峰-2025-06-16](https://liaoxuefeng.com/books/java/introduction/index.html)，遵循[CC BY 4.0协议](https://creativecommons.org/licenses/by/4.0/legalcode.zh-hans)。
+> 声明：本篇笔记部分摘自[《Java核心技术（卷Ⅰ） - 机械工业出版社》](https://detail.tmall.com/item.htm?ali_refid=a3_420434_1006%3A1151895243%3AN%3AoB1xLXSDdjSpCunkFwpZbCtvD%2B6YEaA9%3A39f8fcdda956d1ec63523e9a6e9e2355&id=708821240842&mi_id=0000mg2-P7Ustbzeym2_6DxuUMLCpndkVCAGc5EaA_l8QQ0&mm_sceneid=1_0_128421313_0&priceTId=2147831a17554253371677975e1dca&spm=a21n57.1.hoverItem.2&utparam=%7B%22aplus_abtest%22%3A%226b956865e0df43cd4a6620880d877f11%22%7D&xxc=ad_ztc)及[Java教程-廖雪峰-2025-06-16](https://liaoxuefeng.com/books/java/introduction/index.html)，参考了哔哩哔哩上“黑马Java磊哥”的[反射与注解专题讲解视频](https://www.bilibili.com/video/BV1DG4y1G7xy/ )，遵循[CC BY 4.0协议](https://creativecommons.org/licenses/by/4.0/legalcode.zh-hans)。
 > 存在由AI生成的小部分内容，仅供参考，请仔细甄别可能存在的错误。
+
+> 🤔 反射和注解是Java中的高级技术，常用于开发框架等底层开发工作，应用级开发中的使用频率不高。如果刚入门Java，不是很能理解的话建议先跳过本节😕，等到对Java及面向对象有一定的理解后再来尝试深入学习也不迟。
 
 # 一、反射
 
@@ -505,19 +507,53 @@ public class Hello {
 
 ## 1.注解的作用
 
-注解本身对代码逻辑没有任何影响，如何使用注解完全由工具决定。Java注解有以下三种类型：
+注解（`Annotation`）本身对代码逻辑没有任何影响，如何使用注解完全由工具决定。Java注解有以下三种类型：
 
 1. 由编译器使用的注解，它们不会被编译进入`.class`文件，它们在编译后就被编译器扔掉了。，如：
 	- `@Override`：让编译器检查该方法是否正确地实现了覆写；
 	- `@SuppressWarnings`：告诉编译器忽略此处代码产生的警告。
-2. 
+2. 由工具处理`.class`文件使用的注解，比如有些工具会在加载class的时候，对class做动态修改，实现一些特殊的功能。这类注解会被编译进入`.class`文件，但加载结束后并不会存在于内存中。这类注解只被一些底层库使用，一般我们不必自己处理。
+3. 在程序运行期能够读取的注解，它们在加载后一直存在于JVM中，这也是最常用的注解。
 
+## 2.注解参数
 
+定义一个注解时，还可以定义配置参数。配置参数可以包括：
 
+- 所有基本类型；
+- String；
+- 枚举类型；
+- 基本类型、String、Class以及枚举的数组。
 
+因为配置参数必须是常量，所以，上述限制保证了注解在定义时就已经确定了每个参数的值。
 
+注解的配置参数可以有默认值，缺少某个配置参数时将使用默认值。
+
+此外，大部分注解会有一个名为`value`的配置参数，对此参数赋值，可以只写常量，相当于省略了value参数。
+
+```java
+@Check(min=0, max=100,value=50)
+```
+
+如果只写注解，相当于全部使用默认值。
+
+## 3.定义注解
+
+Java语言使用`@interface`语法来定义注解，它的格式如下：
+
+```java
+public @interface Report {
+    int type() default 0;
+    String level() default "medium";
+    String value() default "";
+}
+```
+
+注解的参数类似无参数方法，最好用`default`设定一个默认值。最常用的参数应当命名为`value`。
+
+（先忽略掉吧，太抽象了😥等我研究明白再接着往下写，先去学泛型吧……）
 
 --- 
 # 参考资料
 
 [^1]: 廖雪峰的官方网站.Java教程\[EB/OL].(2025-06-07)\[2025-08-21]. https://www.cnblogs.com/echolun/p/12709761.html
+[^2]: 黑马Java磊哥【黑马磊哥】Java反射、注解、反射机制、反射专题、注解专题、挑战100个Java知识点，相信听完这套课，肯定可以解锁Java反射和注解\[EB/OL].(2022-12-01)\[2025-08-26]. https://www.bilibili.com/video/BV1DG4y1G7xy/ 
