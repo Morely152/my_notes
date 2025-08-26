@@ -313,6 +313,8 @@ class Person() {
 
 ## 3.调用方法
 
+### ① 获取所有的方法
+
 既然能获取，甚至是设置对象的字段，那么我们也可以获取`Class`的所有方法信息。以下是几个实现的方法：
 
 | 方法                                         | 返回值               |
@@ -322,7 +324,193 @@ class Person() {
 | `Method[] getMethods()`                    | 所有public的方法（包括父类） |
 | `Method[] getDeclaredMethods()`            | 所有Method（不包括父类）   |
 
+每个方法对象都包含了这个方法的所有信息：
 
+- `getName()`：返回方法名称，例如：`"getScore"`；
+- `getReturnType()`：返回方法返回值类型，也是一个Class实例，例如：`String.class`；
+- `getParameterTypes()`：返回方法的参数类型，是一个Class数组，例如：`{String.class, int.class}`；
+- `getModifiers()`：返回方法的修饰符，它是一个`int`，不同的bit表示不同的含义。
+
+### ② 调用获取到的方法
+
+```java
+import java.lang.reflect.InvocationTargetException;  
+import java.lang.reflect.Method;  
+  
+public class Demo {  
+  
+    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {  
+  
+        // String对象:  
+        String s = "Hello world";  
+        // 获取String substring(int)方法，参数为int:  
+        Method m = String.class.getMethod("substring", int.class);  
+        // 在s对象上调用该方法并获取结果:  
+        String r = (String) m.invoke(s, 6);  
+        // 打印调用结果:  
+        System.out.println(r);
+    }  
+}
+
+// 运行结果：world
+```
+
+同样地，我们可以通过 `Method.setAccessible(true)` 允许调用对象中的非public方法。
+
+## 4.调用构造方法
+
+如果通过反射来创建新的实例，可以调用Class提供的newInstance()方法：
+
+```java
+Person p = Person.class.newInstance();
+```
+
+调用`Class.newInstance()`的局限是，它只能调用该类的public无参数构造方法。如果构造方法带有参数，或者不是public，就无法直接通过`Class.newInstance()`来调用。
+
+为了调用任意的构造方法，Java的反射API提供了`Constructor`对象，它包含一个构造方法的所有信息，可以创建一个实例。处理`Constructor`对象和获取对象的方法很类似，不同之处仅在于它是一个构造方法，并且，调用结果总是返回实例：
+
+```java
+import java.lang.reflect.Constructor;
+
+public class Demo {
+    public static void main(String[] args) throws Exception {
+        // 获取构造方法Integer(int):
+        Constructor cons1 = Integer.class.getConstructor(int.class);
+        // 调用构造方法:
+        Integer n1 = (Integer) cons1.newInstance(123);
+        System.out.println(n1);
+
+        // 获取构造方法Integer(String)
+        Constructor cons2 = Integer.class.getConstructor(String.class);
+        Integer n2 = (Integer) cons2.newInstance("456");
+        System.out.println(n2);
+    }
+}
+```
+
+通过Class实例获取`Constructor`的方法如下：
+
+| 方法                                 | 返回值                        |
+| ---------------------------------- | -------------------------- |
+| `getConstructor(Class...)`         | 获取某个`public`的`Constructor` |
+| `getDeclaredConstructor(Class...)` | 获取某个`Constructor`          |
+| `getConstructors()`                | 获取所有`public`的`Constructor` |
+| `getDeclaredConstructors()`        | 获取所有`Constructor`          |
+
+注意`Constructor`总是当前类定义的构造方法，和父类无关，因此不存在多态的问题。
+
+调用非`public`的`Constructor`时，必须首先通过`setAccessible(true)`设置允许访问。
+
+
+
+## 5.获取继承关系
+
+### ① 获取父类的Class
+
+获取到`Class`实例后，我们还可以调用`Class`实例的方法`getSuperclass()`获取父类的`Class`：
+
+```java
+public class Demo {
+    public static void main(String[] args) throws Exception {
+        Class cls = Integer.class;
+        
+        Class sup_cls = cls.getSuperclass();          // 第一级父类
+        System.out.println(sup_cls);
+        
+        Class sup2_cls = sup_cls.getSuperclass();     // 第二级父类
+        System.out.println(sup2_cls);
+        
+        System.out.println(sup2_cls.getSuperclass()); // 第三集父类
+    }
+}
+```
+
+运行上述代码，可以看到，`Integer`的父类类型是`Number`，`Number`的父类是`Object`，`Object`的父类是`null`。除`Object`外，其他任何非`interface`的`Class`都必定存在一个父类类型。
+
+### ② 获取接口
+
+由于一个类可能实现一个或多个接口，通过`Class`的`getInterfaces()`方法，我们就可以查询到实现的接口类型。例如，查询`Integer`实现的接口：
+
+```java
+import java.lang.reflect.Method;
+
+public class Demo {
+    public static void main(String[] args) throws Exception {
+        Class s = Integer.class;
+        Class[] is = s.getInterfaces();
+        for (Class i : is) {
+            System.out.println(i);
+        }
+    }
+}
+```
+
+运行上述代码可知，`Integer`实现的接口有：
+
+- java.lang.Comparable
+- java.lang.constant.Constable
+- java.lang.constant.ConstantDesc
+
+要特别注意：`getInterfaces()`只返回当前类直接实现的接口类型，并不包括其父类实现的接口类型。如果一个类没有实现任何`interface`，那么`getInterfaces()`返回空数组。
+
+### ③ 继承关系
+
+像在普通对象中调用`instanceof()`查看对象能否向上转型，我们对`Class`实例使用`isAssignableForm()`来查看它们之间的继承关系：
+
+```java
+Object n = Integer.valueOf(123);
+boolean isDouble = n instanceof Double; // false
+```
+
+## 6.动态代理
+
+Java的`class`和`interface`有这样的区别：
+
+- 可以实例化非抽象的`class`；
+- 不能实例化`interface`。
+
+所有`interface`类型的变量总是通过某个实例向上转型并赋值给接口类型变量的：
+
+```java
+CharSequence cs = new StringBuilder();
+```
+
+我们也可以不编写类，直接在运行期间创建某个`interface`的实例，这就需要使用**动态代理**（dynamic proxy）的机制。
+
+这一部分先省略吧，毕竟我前面的都不是很懂…实际上反射在应用开发中使用得不多（常用于底层组件开发），我认为应该先掌握更加基础的知识再逐渐深入。
+
+# 二、注解
+
+注解是放在Java源码的类、方法、字段、参数前的一种特殊“注释”：
+
+```java
+@Resource("hello")
+public class Hello {
+    @Inject
+    int n;
+
+    @PostConstruct
+    public void hello(@Param String name) {
+        System.out.println(name);
+    }
+
+    @Override
+    public String toString() {
+        return "Hello";
+    }
+}
+```
+
+与注释不同的是，注解可以被编译器打包进入`.class`文件而不是直接被忽略，因此注解是一种用作标注的“元数据”。
+
+## 1.注解的作用
+
+注解本身对代码逻辑没有任何影响，如何使用注解完全由工具决定。Java注解有以下三种类型：
+
+1. 由编译器使用的注解，它们不会被编译进入`.class`文件，它们在编译后就被编译器扔掉了。，如：
+	- `@Override`：让编译器检查该方法是否正确地实现了覆写；
+	- `@SuppressWarnings`：告诉编译器忽略此处代码产生的警告。
+2. 
 
 
 
