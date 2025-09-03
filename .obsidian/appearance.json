@@ -1,0 +1,17 @@
+{
+  "accentColor": "",
+  "textFontFamily": "Monaco,霞鹜文楷",
+  "monospaceFontFamily": "Monaco",
+  "baseFontSize": 21,
+  "translucency": true,
+  "theme": "moonstone",
+  "showRibbon": true,
+  "cssTheme": "Typewriter",
+  "baseFontSizeAction": true,
+  "enabledCssSnippets": [
+    "page-width",
+    "img-center"
+  ],
+  "nativeMenus": false,
+  "interfaceFontFamily": ""
+}

@@ -1,0 +1,26 @@
+{
+  "promptDelete": false,
+  "propertiesInDocument": "hidden",
+  "showLineNumber": false,
+  "pdfExportSettings": {
+    "includeName": true,
+    "pageSize": "A4",
+    "landscape": false,
+    "margin": "0",
+    "downscalePercent": 80
+  },
+  "userIgnoreFilters": [
+    "/Images",
+    "Images/",
+    "4.作业文档/"
+  ],
+  "showUnsupportedFiles": false,
+  "attachmentFolderPath": "Images",
+  "alwaysUpdateLinks": true,
+  "spellcheck": false,
+  "vimMode": false,
+  "readableLineLength": true,
+  "rightToLeft": false,
+  "useMarkdownLinks": true,
+  "focusNewTab": true
+}

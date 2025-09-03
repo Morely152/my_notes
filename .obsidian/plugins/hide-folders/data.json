@@ -1,0 +1,11 @@
+{
+  "areFoldersHidden": false,
+  "matchCaseInsensitive": true,
+  "addHiddenFoldersToObsidianIgnoreList": false,
+  "hideBottomStatusBarIndicatorText": false,
+  "enableCompatQuickExplorer": false,
+  "attachmentFolderNames": [
+    "Images",
+    ""
+  ]
+}

@@ -1,0 +1,222 @@
+{
+  "main": {
+    "id": "89dc8280622ccfe7",
+    "type": "split",
+    "children": [
+      {
+        "id": "c95f1daa2d1f75dd",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6174a8f20669b54d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "01 - 编程技术/Java/13.Java学习笔记（十三）：多线程.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "13.Java学习笔记（十三）：多线程"
+            }
+          },
+          {
+            "id": "b1e30ac02fabc238",
+            "type": "leaf",
+            "state": {
+              "type": "canvas",
+              "state": {
+                "file": "学习技能树.canvas",
+                "viewState": {
+                  "x": -650.2073241321225,
+                  "y": -1582.233008613589,
+                  "zoom": -1.563588849928589
+                }
+              },
+              "icon": "lucide-layout-dashboard",
+              "title": "学习技能树"
+            }
+          },
+          {
+            "id": "b1b00ceb59947b18",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "长期任务规划.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "长期任务规划"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "2551175de8933c80",
+    "type": "split",
+    "children": [
+      {
+        "id": "1393c48897918039",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0265ed20a31764c1",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "c5ace3cd6c61be46",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "5894f6286b09341f",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "horizontal",
+    "width": 236.5,
+    "collapsed": true
+  },
+  "right": {
+    "id": "32fa3ccbb191afcd",
+    "type": "split",
+    "children": [
+      {
+        "id": "8c242652a24a7b6b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b8940557c68c4862",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "01 - 编程技术/Java/13.Java学习笔记（十三）：多线程.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "13.Java学习笔记（十三）：多线程 的大纲"
+            }
+          },
+          {
+            "id": "986f5ee5e614d845",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 220.5
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "bases:创建新数据库": false,
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "hide-folders:Hide hidden folders again": false
+    }
+  },
+  "active": "6174a8f20669b54d",
+  "lastOpenFiles": [
+    "01 - 编程技术/Java/assets/13.Java学习笔记（十三）：多线程/20250903033103454.png",
+    "学习技能树.canvas",
+    "01 - 编程技术/Java/13.Java学习笔记（十三）：多线程.md",
+    "01 - 编程技术/Java/0.Java学习清单.md",
+    "长期任务规划.md",
+    "技能树.emmx.njSkUB",
+    "00 - 项目文档/《番茄魔方》移动端文档/《番茄魔方》测试版开发流程.md",
+    "技能树.lnk",
+    "技能树.emmx - 快捷方式.lnk",
+    "学习技能树.md",
+    "技能树.emmx",
+    "未命名思维导图.md",
+    "技能树.md.lnk",
+    "技能树.emmx.rAsQvy",
+    "assets/学习技能树",
+    "01 - 编程技术/Java/5.Java学习笔记（五）：反射与注解.md",
+    "01 - 编程技术/Java/7.Java学习笔记（七）：集合.md",
+    "01 - 编程技术/Java/6.Java学习笔记（六）：泛型.md",
+    "01 - 编程技术/Java/4Java学习笔记（四）：异常处理.md",
+    "01 - 编程技术/Java/2.Java学习笔记（二）：引用类型与流程控制语句.md",
+    "01 - 编程技术/Java/12.Java学习笔记（十二）：加密与安全.md",
+    "02 - 计科理论知识/计算机组成原理.md",
+    "assets/资料链接目录",
+    "assets/学习技能树/20250902124201105.png",
+    "assets/视频课程目录",
+    "assets",
+    "00 - 项目文档/《番茄魔方》桌面端文档/《番茄魔方》详细设计.md",
+    "01 - 编程技术/Java/11.Java学习笔记（十一）：正则表达式.md",
+    "01 - 编程技术/Java/10.Java学习笔记（十）：单元测试.md",
+    "01 - 编程技术/Java/9.Java学习笔记（九）：日期与时间.md",
+    "01 - 编程技术/Java/8.Java学习笔记（八）：输入输出流.md",
+    "02 - 计科理论知识/计算机科学速成课笔记.md",
+    "01 - 编程技术/Java/assets/13.Java学习笔记（十三）：多线程/20250827173357108.png",
+    "01 - 编程技术/微信小程序/7.微信小程序开发（七）：事件与冒泡.md",
+    "03 - 博客文章/建站教程/Hexo+Fluid个人博客搭建教程（一）：项目概述.md",
+    "01 - 编程技术/Web/1.Web学习笔记（一）：HTML篇.md",
+    "01 - 编程技术/Web/5.Web学习笔记（五）：Vue3篇.md",
+    "01 - 编程技术/Web/4.Web学习笔记（四）：jQuery篇.md",
+    "01 - 编程技术/Web/3.Web学习笔记（三）：JavaScript篇.md",
+    "01 - 编程技术/Java/assets/6.Java学习笔记（六）：泛型/20250827032217880.png",
+    "01 - 编程技术/Java/assets/Java学习笔记（六）：泛型/20250827032033215.png",
+    "01 - 编程技术/Java/assets/4Java学习笔记（四）：异常处理/20250825010857908.png",
+    "01 - 编程技术/Java/assets/Java学习笔记（三）：面向对象编程/20250824120600536.png",
+    "01 - 编程技术/Java/assets/Java学习笔记（三）：面向对象编程/20250823225917288.png",
+    "01 - 编程技术/Java/assets/3.Java学习笔记（三）：面向对象编程/20250823165958211.png",
+    "01 - 编程技术/Java/assets/Java学习笔记（三）：面向对象编程/20250822170332866.png",
+    "01 - 编程技术/Java/assets/3.Java学习笔记（三）：面向对象编程/20250822100201538.png"
+  ]
+}
