@@ -44,15 +44,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "长期任务规划.md",
+                "file": "Python.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "长期任务规划"
+              "title": "Python"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -105,13 +106,11 @@
               "title": "书签"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 236.5,
-    "collapsed": true
+    "width": 236.5
   },
   "right": {
     "id": "32fa3ccbb191afcd",
@@ -127,13 +126,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01 - 编程技术/Java/13.Java学习笔记（十三）：多线程.md",
+                "file": "Python.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "13.Java学习笔记（十三）：多线程 的大纲"
+              "title": "Python 的大纲"
             }
           },
           {
@@ -149,6 +148,39 @@
               },
               "icon": "lucide-tags",
               "title": "标签"
+            }
+          },
+          {
+            "id": "7eeead6648520c4c",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Python.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Python 的反向链接列表"
+            }
+          },
+          {
+            "id": "50927974e726de13",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Python.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Python 的出链列表"
             }
           }
         ]
@@ -169,11 +201,13 @@
       "hide-folders:Hide hidden folders again": false
     }
   },
-  "active": "6174a8f20669b54d",
+  "active": "b1b00ceb59947b18",
   "lastOpenFiles": [
+    "未命名.base",
+    "Python.md",
+    "01 - 编程技术/Java/13.Java学习笔记（十三）：多线程.md",
     "01 - 编程技术/Java/assets/13.Java学习笔记（十三）：多线程/20250903033103454.png",
     "学习技能树.canvas",
-    "01 - 编程技术/Java/13.Java学习笔记（十三）：多线程.md",
     "01 - 编程技术/Java/0.Java学习清单.md",
     "长期任务规划.md",
     "技能树.emmx.njSkUB",
@@ -196,7 +230,6 @@
     "assets/资料链接目录",
     "assets/学习技能树/20250902124201105.png",
     "assets/视频课程目录",
-    "assets",
     "00 - 项目文档/《番茄魔方》桌面端文档/《番茄魔方》详细设计.md",
     "01 - 编程技术/Java/11.Java学习笔记（十一）：正则表达式.md",
     "01 - 编程技术/Java/10.Java学习笔记（十）：单元测试.md",
@@ -209,14 +242,12 @@
     "01 - 编程技术/Web/1.Web学习笔记（一）：HTML篇.md",
     "01 - 编程技术/Web/5.Web学习笔记（五）：Vue3篇.md",
     "01 - 编程技术/Web/4.Web学习笔记（四）：jQuery篇.md",
-    "01 - 编程技术/Web/3.Web学习笔记（三）：JavaScript篇.md",
     "01 - 编程技术/Java/assets/6.Java学习笔记（六）：泛型/20250827032217880.png",
     "01 - 编程技术/Java/assets/Java学习笔记（六）：泛型/20250827032033215.png",
     "01 - 编程技术/Java/assets/4Java学习笔记（四）：异常处理/20250825010857908.png",
     "01 - 编程技术/Java/assets/Java学习笔记（三）：面向对象编程/20250824120600536.png",
     "01 - 编程技术/Java/assets/Java学习笔记（三）：面向对象编程/20250823225917288.png",
     "01 - 编程技术/Java/assets/3.Java学习笔记（三）：面向对象编程/20250823165958211.png",
-    "01 - 编程技术/Java/assets/Java学习笔记（三）：面向对象编程/20250822170332866.png",
-    "01 - 编程技术/Java/assets/3.Java学习笔记（三）：面向对象编程/20250822100201538.png"
+    "01 - 编程技术/Java/assets/Java学习笔记（三）：面向对象编程/20250822170332866.png"
   ]
 }
